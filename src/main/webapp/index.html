@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boujock</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" type="text/javascript"></script>
+
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen bg-gray-100">
+    <header class="header">
+        <a href="about.html"><h1>Boujock</h1></a>
+    </header>
+
+    <canvas id="cyberBackgroundCanvas"></canvas>
+
+<div class="main-content-wrapper">
+        <div class="video-section">
+            <!--
+            Video element attributes:
+            - `id="boujeeVideo"`: Added an ID for easy JavaScript targeting.
+            - `autoplay`: Starts playing the video automatically as soon as it can.
+            - `loop`: Makes the video repeat indefinitely.
+            - `muted`: Mutes the audio. This is CRUCIAL for autoplay to work reliably across browsers,
+                       as many browsers block autoplay of videos with sound without user interaction.
+            - `playsinline`: Recommended for iOS devices to play video inline rather than fullscreen.
+            - `class="circular-video"`: Applies the custom CSS for circular shape.
+            -->
+            <video id="boujeeVideo" autoplay loop muted playsinline class="circular-video">
+                <!--
+                The source path below is set to 'videos/boujeeWalk.mp4'.
+                Your original path '/home/gono/Documents/Boujock/src/main/webapp/videos/boujeeWalk.mp4'
+                is a local file system path and will NOT work in a web browser.
+                Please ensure 'boujeeWalk.mp4' is located in a 'videos' folder
+                relative to your HTML file on your web server for it to load correctly.
+                -->
+                <source src="/home/gono/Documents/Boujock/src/main/webapp/videos/boujeeWalk.mp4" type="video/mp4">
+                <!-- Fallback message if the browser does not support the video tag -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Container for the curved text SVG -->
+        <div class="curved-text-container">
+            <!--
+            SVG element for the curved text:
+            - `viewBox="0 0 500 200"`: Defines the internal coordinate system for the SVG.
+                                       This helps with scaling.
+            - `preserveAspectRatio="xMidYMid meet"`: Default, ensures the SVG scales proportionally.
+            -->
+            <svg class="curved-text-svg" viewBox="0 0 500 200">
+                <!--
+                The <path> element defines the curve that the text will follow.
+                - `id="curve"`: Used by <textPath> to reference this path.
+                - `fill="none"` and `stroke="none"`: Makes the path itself invisible.
+                - `d="M 400 50 A 150 150 0 0 1 100 50"`: This is an SVG arc command:
+                    - `M 400 50`: Move to (start point) - This is the right side.
+                    - `A 150 150`: Arc radius X and Y are 150 (making it a circular arc).
+                    - `0`: x-axis-rotation (not applicable for perfect circles).
+                    - `0`: large-arc-flag (0 for the smaller arc segment).
+                    - `1`: sweep-flag (1 for clockwise. From (400,50) to (100,50) clockwise will curve downwards,
+                           creating a 'smile' shape which is ideal for text bending below).
+                    - `100 50`: End point - This is the left side.
+                This path creates a curve that starts on the right, dips down in the middle, and goes up on the left.
+                -->
+                <path id="curve" fill="none" stroke="none"
+                      d="M 60 50 A 250 250 0 0 0 440 40"/>
+                    
+                      
+                      
+                <!--
+                The <textPath> element makes text follow an SVG path.
+                - `href="#curve"`: Links the text to the path defined by `id="curve"`.
+                - `startOffset="0%"`: Starts the text at the beginning of the path.
+                - `text-anchor="start"`: Aligns the start of the text to the `startOffset` point.
+                This combination ensures "The" is on the right, "Boujee" curves along the bottom,
+                and "Peacock" continues curving up on the left side, as requested.
+                -->
+                <text>
+                    <textPath href="#curve" startOffset="0%" text-anchor="start">
+                        -Boujee-------Peacock---
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+    </div>
+
+        
+    
+    <footer class="footer">
+        <p>&copy;2025 All Rights Reserved.</p>
+    </footer>
+     <audio id="backgroundSoundtrack" autoplay loop>
+        <!--
+        Replace 'path/to/your/soundtrack.mp3' with the actual relative path to your audio file.
+        For example, if your audio is in 'audio/sound.mp3' relative to this HTML file, use 'audio/sound.mp3'.
+        The 'muted' attribute is not used here as per the request to have sound playing.
+        However, be aware that some browsers might still block autoplay with sound without user interaction.
+        A user interaction might be required to play the audio in some browser policies.
+        -->
+        <source src="/home/gono/Documents/Boujock/src/main/webapp/audio/city-streets-342387.mp3" type="audio/mpeg">
+    </audio>
+</body>
+</html>

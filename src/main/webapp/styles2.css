@@ -1,0 +1,159 @@
+body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #020003; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Keyframes for the glowing "beep" animation */
+        @keyframes image-glow-beep {
+            0% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+                box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);    
+            
+            }
+            100% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+
+
+ @keyframes home-glow-beep{
+            0% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+                box-shadow: 0 0 15px rgba(181, 31, 211, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);    
+            
+            }
+            100% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+      
+
+
+
+        @keyframes bio-glow-beep {
+            0% {
+                filter: drop-shadow(0 0 0 rgba(194, 36, 241, 0)) drop-shadow(0 0 0 rgba(51, 240, 45, 0));
+            }
+            50% {
+                filter: drop-shadow(0 0 6px rgba(228, 56, 99, 0.7)) drop-shadow(0 0 6px rgba(23, 103, 223, 0.7));
+                text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+            }
+            100% {
+                filter: drop-shadow(0 0 0 rgba(194, 24, 236, 0)) drop-shadow(0 0 0 rgba(33, 46, 226, 0));
+            }
+        }
+
+        @keyframes email-link-glow-beep {
+            0% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+                box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);    
+            
+            }
+            100% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #01030c;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .header a, .header span {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+             animation: home-glow-beep 2s infinite ease-in-out;
+        }
+
+
+        .header a:hover, .header span:hover {
+            text-shadow: 0 0 8px rgba(238, 234, 26, 0.8);
+            box-shadow: 0 0 15px rgba(245, 4, 96, 0.5);
+        }
+
+        .about-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content:flex-end;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+            padding: 50px;
+             z-index: 10;
+             width:80%;
+
+             height: 60%;
+        }
+
+        .about-content img {
+            border-radius: 50%; /* Make image round */
+            width: 30%;
+            height: 80%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            animation: image-glow-beep 1s infinite ease-in-out;
+        }
+        .bio{
+            animation: bio-glow-beep 2s infinite ease-in-out;
+            padding: 13px;
+             width: 60%;
+            height: 50%;
+            color: white;
+            justify-content: space-evenly;
+            position: relative;
+            font-style: italic;
+            font-size: 1.2rem;
+
+        }
+        .email-link{
+            position: relative;
+            animation: email-link-glow-beep 0.3s infinite ease-in-out;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #00030c;
+            color: white;
+            margin-top: auto; /* Push footer to the bottom */
+             z-index: 20;
+            position: relative;
+        }
+        #cyberBackgroundCanvas {
+            position: fixed; /* Position absolutely to cover the background */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Place it behind other content but above body background */
+            pointer-events: none; /* Allows clicks/interactions to pass through to elements below */
+        }

@@ -1,0 +1,201 @@
+
+         /* Basic styling for the body and layout using Tailwind CSS */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #040f1b; /* Light gray background */
+            min-height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes header to top, footer to bottom */
+            align-items: center; /* Centers content horizontally */
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 5px 3px;
+            background-color: #03000c;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            font-weight: bold;
+            font-size: 1.5rem;
+            width: 100%;
+            position: relative;
+            z-index: 20;
+        }
+         
+/* Keyframes for the glowing "beep" animation */
+        @keyframes glow-beep {
+            0% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
+                box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);    
+            
+            }
+            100% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+@keyframes svg-glow-beep {
+            0% {
+                filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
+            }
+            50% {
+                /* Combine blue and yellow glows for a mixed effect */
+                filter: drop-shadow(0 0 6px rgba(106, 183, 235, 0.7)) drop-shadow(0 0 6px rgba(208, 241, 57, 0.7));
+            }
+            100% {
+                filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
+            }
+        }
+        @keyframes video-glow-beep {
+            0% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
+                box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);    
+            
+            }
+            100% {
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+
+        
+
+        .header a, .header span {
+            color: rgb(233, 218, 12); /* User's updated link color */
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 50%;
+            /* Apply the continuous glowing animation */
+            animation: glow-beep 1s infinite ease-in-out;
+            transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Keep existing transition for hover */
+        }
+
+        .header a:hover, .header span:hover {
+            text-shadow: 0 0 8px rgba(106, 183, 235, 0.8); /* User's updated hover effect - stronger on hover */
+            box-shadow: 0 0 15px rgba(208, 241, 57, 0.5); /* User's updated hover effect - stronger on hover */
+        }
+
+        .main-content-wrapper {
+            position: relative; /* Crucial for positioning the curved text container */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1; /* Allows it to take up available space */
+            margin: 2rem 0; /* Add some vertical margin */
+            z-index: 15;
+        }
+
+        .curved-text-container {
+            position: absolute; /* Position relative to .main-content-wrapper */
+            /*
+            The video is 300px tall. We want the text to "bend around its bottom".
+            We position the top of the SVG container so that the curve aligns with the video's lower half.
+            The SVG's viewBox starts at Y=0. Our path's highest point is Y=50.
+            Setting top: 200px means the Y=0 of the SVG is 200px from the wrapper's top.
+            The actual text's highest point (Y=50) would then be at 250px, which is slightly below the video's center (150px).
+            This creates the desired overlap for the "bending" effect.
+            */
+            top: 250px; /* Adjusted: Pushes the text further down */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            width: 500px; /* Matches SVG viewBox width */
+            height: 200px; /* Matches SVG viewBox height */
+            /* Ensure it scales nicely on smaller screens */
+            max-width: 90vw; /* Takes max 90% of viewport width */
+            height: auto; /* Allows height to adjust proportionally based on width */
+            overflow: visible; /* Important for text that might render slightly outside SVG bounds */
+            z-index: 5; /* Ensure text is behind the video, so it "curves around" */
+        }
+
+         /* Styling for the SVG text itself */
+        .curved-text-svg text {
+            font-family: "Inter", sans-serif; /* Consistent font */
+            font-size: 2.5rem; /* Matches the original h1 size */
+            font-weight: bold;
+            fill: #dfeb3d; /* Text color */
+            /* You can adjust letter-spacing if the text doesn't fit the path perfectly */
+            letter-spacing: 0.01em;
+            animation: svg-glow-beep 1s infinite ease-in-out;
+        }
+
+        
+
+
+        .circular-video {
+            border-radius: 50%; /* Makes the video circular */
+            object-fit: cover; /* Ensures the video content covers the circular area */
+            width: 350px; /* Default width for circular video */
+            height: 350px; /* Default height for circular video (must match width for perfect circle) */
+            display: block; /* Ensures it behaves as a block element */
+            margin: 0 auto; /* Centers the video horizontally within its container */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23); /* Adds a subtle shadow */
+            z-index: 10;
+            animation: video-glow-beep 2s infinite ease-in-out;
+        }
+         #cyberBackgroundCanvas {
+            position: fixed; /* Position absolutely to cover the background */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Place it behind other content but above body background */
+            pointer-events: none; /* Allows clicks/interactions to pass through to elements below */
+        }
+        @media (max-width: 640px) {
+            .circular-video {
+                width: 200px; /* Smaller width for mobile (user's value) */
+                height: 200px; /* Smaller height for mobile (user's value) */
+            }
+            .curved-text-container {
+                /*
+                Adjusted `top` for mobile, considering 200px video and reduced curvature.
+                Video bottom is at 200px. Path starts at Y=50 in SVG.
+                If container top is 170px, then path start (Y=50) is at 170+50 = 220px.
+                This provides a 20px gap, similar to desktop, ensuring good visibility for "The".
+                */
+                top: 170px; /* Adjusted: Pushes text down for mobile (from 150px) */
+                width: 100%; /* Take full width on small screens */
+            }
+            .curved-text-svg text {
+                font-size: 1.8rem; /* Smaller font for small screens (user's value) */
+            }
+        }
+        
+
+
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center the image */
+        }
+
+        .footer {
+            text-align: center;
+            background-color: #03000c;
+            color: white;
+            margin-top: auto; /* Push footer to the bottom */
+             width: 100%;
+            padding: 1rem;
+            font-size: 0.9rem;
+            z-index: 20;
+            position: relative;
+        }
+
+        
