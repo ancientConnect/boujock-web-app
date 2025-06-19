@@ -113,7 +113,7 @@ body {
     text-align: center; /* centering the text within its container */
 }
 .curved-text-container {
-    top: 18em; /* looks good on desktop */
+    top: 40vh; /* looks good on desktop */
 }
 
 .curved-text-svg {
@@ -196,7 +196,7 @@ body {
 /* tablets and smaller desktops from 768px to 1024px*/
 @media (max-width: 1024px) {
     .header {
-        top: 15em;
+        top: 38vh;
         font-size: 1.3rem;
         padding: 8px 5px;
     }
@@ -221,7 +221,7 @@ body {
 /* small Tablets and large phones from 640px to 767px*/
 @media (max-width: 767px) {
     .header {
-        top: 12em;
+        top: 35vh; 
         font-size: 1.2rem;
         flex-direction: column; /* arranging header items vertically */
         padding: 10px 0;
@@ -256,7 +256,7 @@ body {
 /* mobile phones with max-width: 480px*/
 @media (max-width: 480px) {
     .header {
-        top: 10em;
+        top: 30vh; 
         font-size: 1rem;
         padding: 8px 0;
     }
