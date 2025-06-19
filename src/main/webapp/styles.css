@@ -4,16 +4,16 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* push header to top, footer to bottom */
-    align-items: center; 
+    justify-content: space-between; /* pushes header to top, footer to bottom */
+    align-items: center; /* centers content horizontally */
     margin: 0;
-    overflow-x: hidden; /*prevents horizontal scroll from elements like video and ext container */
+    overflow-x: hidden; /* prevents horizontal scroll from elements like videoand texxt container */
     padding: 0;
 }
 
 .header {
     text-align: center;
-    padding: 10px 5px; 
+    padding: 10px 5px;
     background-color: #03000c;
     color: white;
     display: flex;
@@ -28,7 +28,7 @@ body {
     flex-wrap: wrap; /* allows header items to wrap to the next line */
 }
 
-/* keyframes for the glowing beep animation (remain unchanged) */
+/* keyframes for the glowing beep animation */
 @keyframes glow-beep {
     0% {
         text-shadow: none;
@@ -93,29 +93,27 @@ body {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    margin: 2rem 0;
+    margin: 2rem 0; 
     z-index: 15;
-    width: 100%; /* ensuring wrapper takes full width to center content properly*/
-    padding: 0 15px; /* prevents content from touching edges */
-    box-sizing: border-box; /* to include padding in width calculation */
+    width: 100%; /* ensures wrapper takes full width to center content properly */
+    padding: 0 15px; /*  horizontal padding to prevent content from touching edges */
+    box-sizing: border-box;
 }
 
 .curved-text-container {
     position: absolute;
-    /*top: 290px;*/
+    top: 290px; 
     left: 50%;
     transform: translateX(-50%);
     width: 500px;
-    max-width: 90vw; /*  takes max 90% of viewport width */
-    height: auto; /* height will adjust accordingly based on content */
-    overflow: hidden; /* changing from visible to hidden for better text clipping if needed */
+    max-width: 90vw; 
+    height: auto; /* allows height to adjust proportionally based on width */
+    overflow: hidden; /* to better manage text clipping */
     z-index: 5;
-    text-align: center; /* centering the text within its container */
-}
-.curved-text-container {
-    top: 40vh; /* looks good on desktop */
+    text-align: center; /* centers the text within its container */
 }
 
+/* Styling for the SVG text */
 .curved-text-svg {
     display: block; /* ensures SVG behaves as a block element */
     width: 100%; /* makes SVG responsive to its container width */
@@ -124,7 +122,7 @@ body {
 
 .curved-text-svg text {
     font-family: "Inter", sans-serif;
-    font-size: 2.5rem; 
+    font-size: 2.5rem;
     font-weight: bold;
     fill: #dfeb3d;
     letter-spacing: 0.01em;
@@ -134,15 +132,15 @@ body {
 .circular-video {
     border-radius: 50%;
     object-fit: cover;
-    width: 350px;
-    height: 350px; 
+    width: 350px; 
+    height: 350px;
     display: block;
     margin: 0 auto;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     z-index: 10;
     animation: video-glow-beep 2s infinite ease-in-out;
-    max-width: 90vw; /* ensuring video doesn't overflow like a flood on very small screens */
-    max-height: 90vw; /* maintains aspect ratio as square */
+    max-width: 90vw; /* ensures video doesn't burst like boom on very small screens */
+    max-height: 90vw; /* keeps aspect ratio square */
 }
 
 #cyberBackgroundCanvas {
@@ -166,22 +164,22 @@ body {
     text-align: center;
     background-color: #03000c;
     color: white;
-    margin-top: auto;
+    margin-top: auto; /* pushing footer to the bottom */
     width: 100%;
     padding: 1rem;
     font-size: 0.9rem;
     z-index: 20;
     position: relative;
-    box-sizing: border-box;
+    box-sizing: border-box; 
 }
 
-/*media queries for responsiveness*/
+/* --- media Queries for Responsiveness --- */
 
-/* larger desktops*/
+/* larger Desktops */
 @media (min-width: 1600px) {
     .curved-text-container {
-        width: 600px; 
-        top: 320px;
+        width: 600px;
+        top: 320px; 
     }
     .curved-text-svg text {
         font-size: 3rem;
@@ -193,10 +191,9 @@ body {
 }
 
 
-/* tablets and smaller desktops from 768px to 1024px*/
+/* tablets and smaller desktops 768px to 1024px*/
 @media (max-width: 1024px) {
     .header {
-        top: 38vh;
         font-size: 1.3rem;
         padding: 8px 5px;
     }
@@ -218,12 +215,11 @@ body {
     }
 }
 
-/* small Tablets and large phones from 640px to 767px*/
+/* small tablets and large phones 640px to 767px*/
 @media (max-width: 767px) {
     .header {
-        top: 35vh; 
         font-size: 1.2rem;
-        flex-direction: column; /* arranging header items vertically */
+        flex-direction: column;
         padding: 10px 0;
     }
     .header a, .header span {
@@ -236,7 +232,7 @@ body {
         padding: 0 10px;
     }
     .curved-text-container {
-        top: 200px; 
+        top: 220px; 
         width: 100%; 
         max-width: 95vw;
     }
@@ -244,7 +240,7 @@ body {
         font-size: 1.8rem;
     }
     .circular-video {
-        width: 250px;
+        width: 250px; 
         height: 250px;
     }
     .footer {
@@ -253,10 +249,9 @@ body {
     }
 }
 
-/* mobile phones with max-width: 480px*/
+/*mobile Phones of max-width: 480px*/
 @media (max-width: 480px) {
     .header {
-        top: 30vh; 
         font-size: 1rem;
         padding: 8px 0;
     }
@@ -269,7 +264,7 @@ body {
         padding: 0 5px;
     }
     .curved-text-container {
-        top: 170px;
+        top: 200px; 
         max-width: 98vw;
     }
     .curved-text-svg text {
@@ -278,8 +273,8 @@ body {
     .circular-video {
         width: 200px; 
         height: 200px;
-        max-width: 90vw; /* maintains viewport width */
-        max-height: 90vw; /* corresponding viewport height for square ratio */
+        max-width: 90vw; 
+        max-height: 90vw; 
     }
     .footer {
         padding: 0.6rem;
