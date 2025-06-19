@@ -82,6 +82,7 @@ body {
             justify-content: center;
             align-items: center;
             z-index: 20;
+            flex-wrap: wrap; /* allowing header items to wrap on smaller screens */
         }
 
         .header a, .header span {
@@ -91,7 +92,8 @@ body {
             padding: 10px 15px;
             border-radius: 5px;
             transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-             animation: home-glow-beep 2s infinite ease-in-out;
+            animation: home-glow-beep 2s infinite ease-in-out;
+            white-space: nowrap; /* preventing links from breaking mid-word */
         }
 
 
@@ -103,40 +105,46 @@ body {
         .about-content {
             flex-grow: 1;
             display: flex;
-            justify-content:flex-end;
+            justify-content: center;
             flex-direction: row;
             align-items: center;
             text-align: center;
-            padding: 50px;
+            padding: 30px 20px;
             z-index: 10;
-            width:80%;
+            width:90%;
             height: 60%;
+            max-width: 1200px; /* prevents content from stretching too wide on large screens*/
+            margin: 0 auto; /*centering the content horizontally*/
         }
 
         .about-content img {
             border-radius: 50%; /* making the image round */
             width: 30%;
-            height: 80%;
+            height: auto;/*to maintain aspect ratio*/
             object-fit: cover;
             margin-bottom: 20px;
             animation: image-glow-beep 1s infinite ease-in-out;
         }
         .bio{
             animation: bio-glow-beep 2s infinite ease-in-out;
-            padding: 13px;
-             width: 60%;
-            height: 50%;
+            padding: 15px;
+            width: 65%;
             color: white;
             justify-content: space-evenly;
             position: relative;
             font-style: italic;
-            font-size: 1.2rem;
+            font-size: 1.1rem; 
+            line-height: 1.5; /* improves readability */
+            box-sizing: border-box; /* include padding in width calculation */
 
         }
         .email-link{
             position: relative;
             animation: email-link-glow-beep 0.3s infinite ease-in-out;
             color: white;
+            font-size: 1.1rem; /* making sure the link is readable */
+            display: block; /* ensuring it takes its own line if needed */
+            margin-top: 15px; /* adds some space above it */
         }
         .footer {
             text-align: center;
@@ -144,8 +152,9 @@ body {
             background-color: #00030c;
             color: white;
             margin-top: auto; /* pushing footer to the bottom */
-             z-index: 20;
+            z-index: 20;
             position: relative;
+            font-size: 0.9rem;
         }
         #cyberBackgroundCanvas {
             position: fixed; /* positioning absolutely to cover the background */
@@ -156,3 +165,1542 @@ body {
             z-index: 1; /* placing it behind other content but above body background*/
             pointer-events: none; /* allowing clicks to pass through to elements below*/
         }
+             Conversation with Gemini
+
+how to see my tomcat installation path in ec2 instance
+
+To find your Tomcat installation path on an EC2 instance (which is typically a Linux-based server), you can use several methods. The exact path can vary depending on how Tomcat was installed (e.g., manually, via a package manager, or as part of a pre-configured AMI).
+
+Here are the most common ways to check:
+
+1. Check Running Processes (Most Reliable if Tomcat is Running)
+
+If Tomcat is currently running, you can find its path by inspecting the running Java process.
+
+    SSH into your EC2 instance:
+    Bash
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-public-ip
+
+(Replace /path/to/your-key.pem with your private key file and your-ec2-public-ip with your instance's public IP address or DNS name).
+
+List Java processes and grep for Tomcat:
+Bash
+
+ps -ef | grep tomcat
+
+or
+Bash
+
+ps -ef | grep java
+
+Look for output that contains "tomcat" or mentions catalina.home or catalina.base. The catalina.home environment variable usually points to the Tomcat installation directory. You might see something like:
+
+    tomcat     1234      1  0 10:00 ?        00:00:15 /usr/lib/jvm/java-11-amazon-corretto/bin/java -Djava.util.logging.config.file=/opt/tomcat/conf/logging.properties -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom -Djdk.tls.ephemeralDHKeySize=2048 -Djava.protocol.handler.pkgs=org.apache.catalina.webresources -Dorg.apache.catalina.security.SecurityListener.UMASK=0007 -Dignore.endorsed.dirs= -classpath /opt/tomcat/bin/bootstrap.jar:/opt/tomcat/bin/tomcat-juli.jar -Dcatalina.base=/opt/tomcat -Dcatalina.home=/opt/tomcat -Djava.io.tmpdir=/opt/tomcat/temp org.apache.catalina.startup.Bootstrap start
+
+    In this example, CATALINA_HOME and CATALINA_BASE are both set to /opt/tomcat, which is the installation path.
+
+2. Check Environment Variables (if set globally or in startup scripts)
+
+Sometimes, CATALINA_HOME or CATALINA_BASE might be set as environment variables.
+
+    Check ~/.bashrc, ~/.profile, or /etc/profile:
+    Bash
+
+    cat ~/.bashrc | grep CATALINA
+    cat ~/.profile | grep CATALINA
+    cat /etc/profile | grep CATALINA
+
+    Check Tomcat's startup script: Tomcat's startup script (e.g., startup.sh) often defines CATALINA_HOME. You might need to locate this script first using other methods. Common locations for the bin directory containing startup.sh include:
+        /usr/local/tomcat/bin
+        /opt/tomcat/bin
+        /usr/share/tomcat/bin
+
+3. Common Installation Paths
+
+If Tomcat was installed using a package manager or a standard manual installation, it's often found in one of these directories:
+
+    /opt/tomcat (very common for manual installations)
+
+    /usr/local/tomcat (another common manual installation path)
+    /usr/share/tomcatX (where X is the version, e.g., /usr/share/tomcat9 for installations via package managers like apt or yum)
+    /var/lib/tomcatX (often where webapps are deployed, conf might be a symlink to /etc/tomcatX)
+    /etc/tomcatX (primarily for configuration files, might contain tomcatX.conf which defines CATALINA_HOME)
+
+You can try navigating to these directories and listing their contents:
+Bash
+
+ls -l /opt/tomcat
+ls -l /usr/local/tomcat
+ls -l /usr/share/tomcat*
+ls -l /var/lib/tomcat*
+ls -l /etc/tomcat*
+
+4. Use find command (if other methods fail)
+
+If you have root access or sufficient permissions, you can use the find command to search for common Tomcat files like catalina.sh or server.xml. This can take some time.
+
+    Search for catalina.sh (Tomcat's main startup script):
+    Bash
+
+sudo find / -name "catalina.sh" 2>/dev/null
+
+(The 2>/dev/null redirects error messages to null, so you only see valid results.)
+
+Search for server.xml (a key configuration file):
+Bash
+
+    sudo find / -name "server.xml" 2>/dev/null
+
+5. Check Systemd Service File (if Tomcat is managed by systemd)
+
+If Tomcat is set up as a systemd service, its service file might specify CATALINA_HOME or the ExecStart path.
+
+    Check the Tomcat service file:
+    Bash
+
+    systemctl status tomcat
+    # or
+    cat /etc/systemd/system/tomcat.service
+
+    Look for Environment="CATALINA_HOME=..." or the path specified in ExecStart.
+
+Example Workflow:
+
+    SSH into your EC2 instance.
+    Run ps -ef | grep tomcat. This is usually the quickest way if Tomcat is running.
+    If that doesn't yield a clear path, try checking common locations like /opt/tomcat or /usr/share/tomcat* with ls -l.
+    If still no luck, and you suspect it's a systemd service, check cat /etc/systemd/system/tomcat.service.
+    As a last resort, use sudo find / -name "catalina.sh".
+
+Remember to replace placeholders like /path/to/your-key.pem and your-ec2-public-ip with your actual EC2 instance details.
+
+/home/ec2-user/apache-tomcat-9.0.106
+
+Okay, if /home/ec2-user/apache-tomcat-9.0.106 is the output you received or the path you found, then that is your Tomcat installation path on your EC2 instance.
+
+This path indicates that Tomcat was likely installed manually by the ec2-user in their home directory.
+
+To confirm this, you can do the following:
+
+    SSH into your EC2 instance:
+    Bash
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-public-ip
+
+(Replace with your actual key path and IP)
+
+Navigate to that directory:
+Bash
+
+cd /home/ec2-user/apache-tomcat-9.0.106
+
+List its contents:
+Bash
+
+    ls -l
+
+    You should see the standard Tomcat directories like bin, conf, webapps, logs, lib, work, temp, etc.
+
+This confirms that /home/ec2-user/apache-tomcat-9.0.106 is indeed where your Tomcat instance is installed.
+
+/home/ec2-user/apache-tomcat-9.0.106/bin/catalina.sh
+
+Alright, that's even more specific!
+
+/home/ec2-user/apache-tomcat-9.0.106/bin/catalina.sh is the full path to the catalina.sh script within your Tomcat installation.
+
+The actual Tomcat installation path itself is the parent directory of the bin folder, which is:
+
+/home/ec2-user/apache-tomcat-9.0.106
+
+The catalina.sh script is the primary script used to start, stop, and manage your Tomcat server. So, knowing this path is very useful for administering your Tomcat instance.
+
+ tomcat.service - Apache Tomcat Web Application Server
+
+     Loaded: bad-setting (Reason: Unit tomcat.service has a bad unit file setting.)
+
+     Active: inactive (dead)
+
+
+Jun 19 13:25:20 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: /etc/systemd/system/tomcat.service:7: Invalid user/grou>
+
+Jun 19 13:25:20 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: tomcat.service: Unit configuration has fatal error, uni>
+
+Jun 19 13:46:36 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: /etc/systemd/system/tomcat.service:7: Invalid user/grou>
+
+Jun 19 13:46:36 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: tomcat.service: Unit configuration has fatal error, uni>
+
+Jun 19 13:46:49 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: /etc/systemd/system/tomcat.service:7: Invalid user/grou>
+
+Jun 19 13:46:49 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: tomcat.service: Unit configuration has fatal error, uni>
+
+Jun 19 13:59:22 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: /etc/systemd/system/tomcat.service:7: Invalid user/grou>
+
+Jun 19 13:59:22 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: tomcat.service: Unit configuration has fatal error, uni>
+
+Jun 19 13:59:31 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: /etc/systemd/system/tomcat.service:7: Invalid user/grou>
+
+Jun 19 13:59:31 ip-172-31-7-162.eu-north-1.compute.internal systemd[1]: tomcat.service: Unit configuration has fatal error, uni>
+
+lines 1-14/14 (END)
+
+You're seeing errors related to your tomcat.service systemd unit file. The key message repeated in the logs is:
+
+Invalid user/group
+
+And:
+
+tomcat.service: Unit configuration has fatal error, unit will not be loaded.
+
+This means that line 7 of your /etc/systemd/system/tomcat.service file contains an incorrect or non-existent user or group specified for running the Tomcat service.
+
+To fix this, you need to edit your tomcat.service file and correct the User and/or Group settings.
+
+Here's how you can do it:
+
+    Open the service file for editing:
+    You'll need sudo privileges to edit this file.
+    Bash
+
+sudo vi /etc/systemd/system/tomcat.service
+
+(You can use nano instead of vi if you prefer: sudo nano /etc/systemd/system/tomcat.service)
+
+Go to Line 7:
+In vi, you can type :7 and press Enter to jump to line 7.
+
+Identify and correct the User and Group directives:
+Line 7 (or very close to it) will likely contain something like:
+
+User=someuser
+Group=somegroup
+
+Common causes for this error:
+
+    Typo: You might have misspelled the username or group name.
+    Non-existent user/group: The user or group specified does not exist on your system.
+    Incorrect permissions for the user: While less common for "Invalid user/group," ensuring the user has appropriate permissions to the Tomcat installation directory is crucial once the service starts.
+
+What to change them to:
+
+    Recommended: Create a dedicated tomcat user and group for security.
+    Bash
+
+    sudo groupadd tomcat
+    sudo useradd -s /bin/nologin -g tomcat -d /opt/tomcat tomcat
+
+    (If you install Tomcat in /home/ec2-user/apache-tomcat-9.0.106, you might want to consider User=ec2-user for simplicity, but it's generally better to run services with least privilege.) If you create a tomcat user and group, then your service file should look like:
+
+    User=tomcat
+    Group=tomcat
+
+    If you want to run it as ec2-user (less secure but common for quick setups):
+
+    User=ec2-user
+    Group=ec2-user
+
+    (Assuming the ec2-user group exists, which it usually does).
+
+Save the file:
+
+    In vi: Press Esc, then type :wq and press Enter.
+    In nano: Press Ctrl+X, then Y to confirm save, then Enter.
+
+Reload the systemd daemon:
+After modifying any systemd unit file, you must reload the daemon for the changes to take effect:
+Bash
+
+sudo systemctl daemon-reload
+
+Try to start Tomcat again:
+Bash
+
+sudo systemctl start tomcat
+
+Check the status:
+Bash
+
+    sudo systemctl status tomcat
+
+If you still encounter issues, double-check the spelling of the user and group, and ensure those users/groups actually exist on your system. If you want to use a specific user, ensure that user has read and execute permissions to the Tomcat installation directory (/home/ec2-user/apache-tomcat-9.0.106) and write permissions to the logs, temp, and work directories within it.
+
+i have tomcat installed in this directory /home/ec2-user/apache-tomcat-9.0.106. Outline steps for me to set up Tomcat as a systemd service on my Amazon Linux 2023 EC2 instance
+
+Setting up Tomcat as a systemd service on your Amazon Linux 2023 EC2 instance is a robust way to manage its lifecycle. Since your Tomcat is installed in /home/ec2-user/apache-tomcat-9.0.106, we'll base the service file on that location.
+
+Here's a step-by-step outline:
+
+Prerequisites:
+
+    Tomcat Installation: You've confirmed Tomcat is installed and working manually from /home/ec2-user/apache-tomcat-9.0.106.
+    Java Installed: Tomcat requires Java. Ensure you have a compatible JDK installed (e.g., OpenJDK 11, 17, or 21). You can check with java -version.
+    SSH Access: You have SSH access to your EC2 instance.
+
+Steps to Set Up Tomcat as a Systemd Service:
+Step 1: Create a Dedicated Tomcat User and Group (Recommended)
+
+Running services as the ec2-user is generally not recommended for production due to security implications. Creating a dedicated, non-login user and group for Tomcat enhances security.
+
+    SSH into your EC2 instance:
+    Bash
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-public-ip
+
+(Replace with your actual key path and IP)
+
+Create the tomcat group:
+Bash
+
+sudo groupadd tomcat
+
+Create the tomcat user:
+We'll create a system user with no login shell and add it to the tomcat group.
+Bash
+
+    sudo useradd -s /bin/nologin -g tomcat -d /opt/tomcat tomcat
+
+    Note: Even though your Tomcat is in /home/ec2-user/, we set the home directory for the tomcat user to /opt/tomcat. This is a common convention, and it doesn't affect the Tomcat installation's actual path.
+
+Step 2: Set Correct Permissions for Tomcat Directory
+
+The tomcat user needs appropriate permissions to run Tomcat.
+
+    Change ownership of your Tomcat installation directory:
+    Bash
+
+sudo chown -R tomcat:tomcat /home/ec2-user/apache-tomcat-9.0.106
+
+This gives the tomcat user and group ownership of all files and subdirectories.
+
+Make scripts executable:
+Ensure the bin directory's scripts are executable by the tomcat user.
+Bash
+
+    sudo sh -c 'chmod +x /home/ec2-user/apache-tomcat-9.0.106/bin/*.sh'
+
+Step 3: Create the Systemd Service File
+
+This file tells systemd how to manage your Tomcat instance.
+
+    Open a new service file for editing:
+    Bash
+
+sudo vi /etc/systemd/system/tomcat.service
+
+(Or use nano: sudo nano /etc/systemd/system/tomcat.service)
+
+Paste the following content into the file:
+Ini, TOML
+
+[Unit]
+Description=Apache Tomcat Web Application Server
+After=network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto" # <--- IMPORTANT: Adjust this path if your Java is different
+Environment="CATALINA_HOME=/home/ec2-user/apache-tomcat-9.0.106"
+Environment="CATALINA_BASE=/home/ec2-user/apache-tomcat-9.0.106"
+Environment="CATALINA_PID=/home/ec2-user/apache-tomcat-9.0.106/tomcat.pid"
+
+ExecStart=/home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+ExecStop=/home/ec2-user/apache-tomcat-9.0.106/bin/shutdown.sh
+
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Crucially, adjust JAVA_HOME:
+The JAVA_HOME environment variable must point to your Java Development Kit (JDK) installation directory.
+
+    Find your JAVA_HOME:
+    You can often find it by running:
+    Bash
+
+        sudo update-alternatives --config java
+
+        Look for the path ending in /jre or /bin/java. Your JAVA_HOME should be the parent directory of that.
+        Common paths:
+            /usr/lib/jvm/java-11-amazon-corretto
+            /usr/lib/jvm/java-17-amazon-corretto
+            /usr/lib/jvm/jre (if it's a JRE, use the JDK path if possible)
+            If you installed OpenJDK manually, it might be in /opt/jdk11 or similar.
+
+        Example: If java -version says openjdk version "11.0.23" 2024-04-16 LTS and which java points to /usr/bin/java, then JAVA_HOME might be /usr/lib/jvm/java-11-amazon-corretto or /usr/lib/jvm/java-11-openjdk-11.0.23.0.9-1.amzn2023.x86_64.
+        The best way to confirm: Go into the directory that contains the java executable, then go up two levels. For example, if java is in /usr/lib/jvm/java-11-amazon-corretto/bin/java, then JAVA_HOME is /usr/lib/jvm/java-11-amazon-corretto.
+
+    Save the file:
+        In vi: Press Esc, then type :wq and press Enter.
+        In nano: Press Ctrl+X, then Y to confirm save, then Enter.
+
+Step 4: Reload Systemd Daemon
+
+After creating or modifying a systemd unit file, you must reload the daemon.
+Bash
+
+sudo systemctl daemon-reload
+
+Step 5: Enable and Start Tomcat Service
+
+    Enable the service (to start on boot):
+    Bash
+
+sudo systemctl enable tomcat
+
+Start the Tomcat service:
+Bash
+
+    sudo systemctl start tomcat
+
+Step 6: Verify Tomcat Status and Access
+
+    Check the service status:
+    Bash
+
+sudo systemctl status tomcat
+
+You should see "active (running)" in green. Look for any errors in the recent logs.
+
+Check Tomcat logs for more details (optional but recommended):
+Bash
+
+    tail -f /home/ec2-user/apache-tomcat-9.0.106/logs/catalina.out
+
+    This will show you real-time logs. Press Ctrl+C to exit.
+
+    Test in your browser:
+    Open your web browser and navigate to http://your-ec2-public-ip:8080 (replace your-ec2-public-ip with your EC2 instance's public IP address). You should see the Tomcat default page.
+        Troubleshooting: If you can't access it, ensure:
+            Your EC2 instance's security group allows inbound traffic on port 8080 (or whatever port Tomcat is configured to use in server.xml).
+            Tomcat is actually running and not reporting errors in systemctl status tomcat or catalina.out.
+
+Managing Your Tomcat Service:
+
+    Start: sudo systemctl start tomcat
+    Stop: sudo systemctl stop tomcat
+    Restart: sudo systemctl restart tomcat
+    Check Status: sudo systemctl status tomcat
+    Disable (stop from starting on boot): sudo systemctl disable tomcat
+
+This setup provides a robust and standard way to manage your Tomcat server on your Amazon Linux 2023 EC2 instance.
+
+Job for tomcat.service failed because the control process exited with error code.
+
+See "systemctl status tomcat.service" and "journalctl -xeu tomcat.service" for details.
+
+[ec2-user@ip-172-31-7-162 ~]$ sudo systemctl status tomcat
+
+● tomcat.service - Apache Tomcat Web Application Server
+
+     Loaded: loaded (/etc/systemd/system/tomcat.service; enabled; preset: disabled)
+
+     Active: activating (auto-restart) (Result: exit-code) since Thu 2025-06-19 14:27:36 UTC; 9s ago
+
+    Process: 43137 ExecStart=/home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh (code=exited, status=203/EXEC)
+
+        CPU: 1ms
+
+You're getting closer! The error code=exited, status=203/EXEC is a very specific and helpful one from systemd.
+
+203/EXEC means that the executable specified in ExecStart (which is /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh) could not be executed. This is typically due to one of the following reasons:
+
+    Incorrect Path: The path /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh is wrong.
+    Missing Executable: The startup.sh file doesn't exist at that path.
+    Permissions Issues: The tomcat user (or whatever user you've configured in User= in tomcat.service) does not have execute permissions on the startup.sh script, or read/execute permissions on its parent directories.
+    Missing Interpreter: The script itself doesn't have a valid "shebang" line (e.g., #!/bin/sh or #!/bin/bash) or the interpreter specified in the shebang is missing. This is less common for standard Tomcat scripts but worth noting.
+
+Given your previous successful steps, the most likely culprits are permissions issues or a slight typo in the path.
+
+Let's debug this:
+
+Debugging Steps:
+
+    Verify the startup.sh path and existence:
+        SSH into your EC2 instance.
+        Run:
+        Bash
+
+    ls -l /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+
+    Expected Output: You should see something like:
+
+    -rwxr-xr-x 1 tomcat tomcat 12345 Jun 19 13:00 /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+
+        Check: Does the file exist? Is the path exactly as specified in your tomcat.service file? (No typos?)
+        Check Permissions: Look for x (execute) permissions for the owner (tomcat), group (tomcat), and others. If you see rw-r--r-- (no x), that's your problem.
+
+Verify Permissions (Crucial):
+Even if the startup.sh has execute permissions, the tomcat user needs to be able to traverse the parent directories.
+
+    Verify ownership and permissions for the Tomcat base directory:
+    Bash
+
+ls -ld /home/ec2-user/apache-tomcat-9.0.106
+
+    Expected: drwxr-xr-x 7 tomcat tomcat ... /home/ec2-user/apache-tomcat-9.0.106
+    Fix if not tomcat:tomcat:
+    Bash
+
+sudo chown -R tomcat:tomcat /home/ec2-user/apache-tomcat-9.0.106
+
+Fix if permissions are too restrictive (e.g., no x for group/others):
+Bash
+
+    sudo chmod -R u+rwx,g+rx,o+rx /home/ec2-user/apache-tomcat-9.0.106
+
+    (This gives owner full, group read+execute, others read+execute. Adjust as needed for specific security policies, but this is a common starting point.)
+
+Verify permissions for the bin directory:
+Bash
+
+ls -ld /home/ec2-user/apache-tomcat-9.0.106/bin
+
+    Expected: drwxr-xr-x 2 tomcat tomcat ... /home/ec2-user/apache-tomcat-9.0.106/bin
+    Fix if needed:
+    Bash
+
+    sudo chmod -R u+rwx,g+rx,o+rx /home/ec2-user/apache-tomcat-9.0.106/bin
+
+Ensure startup.sh is executable:
+Bash
+
+    sudo chmod +x /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+
+Check journalctl -xeu tomcat.service for more specific errors:
+This command will give you more verbose logging from systemd about why the process failed to execute.
+Bash
+
+    journalctl -xeu tomcat.service
+
+    Look at the lines immediately after "Process: ... (code=exited, status=203/EXEC)". It might provide a more explicit error message.
+
+    Confirm JAVA_HOME in tomcat.service:
+    While 203/EXEC is usually about the script itself, sometimes an incorrect JAVA_HOME can lead to this if the script tries to invoke java and can't find it. Re-verify the JAVA_HOME path in your /etc/systemd/system/tomcat.service file.
+        Run: ls -l /usr/lib/jvm/java-11-amazon-corretto/bin/java (or whatever your JAVA_HOME path is) to ensure the java executable exists there.
+
+Once you make any changes to permissions or the service file:
+
+    Reload Systemd Daemon:
+    Bash
+
+sudo systemctl daemon-reload
+
+Restart Tomcat Service:
+Bash
+
+sudo systemctl start tomcat
+
+Check Status Again:
+Bash
+
+    sudo systemctl status tomcat
+
+Focus heavily on the permissions for the startup.sh script and its parent directories, and ensuring the tomcat user has the necessary access.
+
+-rwxr-x--x. 1 tomkitty tomkitty 1904 Jun  5 19:02 /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+
+Okay, that output for startup.sh is excellent!
+
+-rwxr-x--x. 1 tomkitty tomkitty 1904 Jun 5 19:02 /home/ec2-user/apache-tomcat-9.0.106/bin/startup.sh
+
+This tells us:
+
+    Permissions: rwxr-x--x
+        rwx (owner tomkitty has read, write, execute) - GOOD
+        r-x (group tomkitty has read, execute) - GOOD
+        --x (others have execute only) - GOOD
+        The . at the end indicates SELinux context, which might be a factor, but let's check other things first.
+    Ownership: tomkitty tomkitty (User: tomkitty, Group: tomkitty) - GOOD
+
+Since you changed the user/group to tomkitty and the permissions look correct for the startup.sh itself, the 203/EXEC error is now less likely to be directly about startup.sh's permissions.
+
+The next most likely culprits are:
+
+    The User and Group in your tomcat.service file are still tomcat instead of tomkitty. This is the most probable cause.
+    JAVA_HOME is incorrect or the java executable is not found.
+    Permissions on parent directories. The tomkitty user needs execute permission on /home, /home/ec2-user, and /home/ec2-user/apache-tomcat-9.0.106.
+
+Let's verify and fix these:
+Step 1: Verify tomcat.service User/Group
+
+It's highly likely your systemd service file is still configured to use User=tomcat and Group=tomcat from our previous instructions. You need to change this to tomkitty.
+
+    Edit your tomcat.service file:
+    Bash
+
+sudo vi /etc/systemd/system/tomcat.service
+
+Locate and change User and Group:
+Make sure these lines match your user/group:
+Ini, TOML
+
+User=tomkitty
+Group=tomkitty
+
+Save the file:
+
+    In vi: Press Esc, then type :wq and press Enter.
+
+Reload the systemd daemon:
+Bash
+
+    sudo systemctl daemon-reload
+
+Step 2: Re-check JAVA_HOME
+
+Even though 203/EXEC points to the script itself, if the script immediately tries to execute java and JAVA_HOME is wrong or java isn't found, it can manifest this way.
+
+    First, find your actual JAVA_HOME path on your EC2 instance:
+    Bash
+
+readlink -f $(which java)
+
+This will give you the path to the java executable. Your JAVA_HOME should be the directory two levels up from that.
+Example: If it returns /usr/lib/jvm/java-11-amazon-corretto/bin/java, then your JAVA_HOME is /usr/lib/jvm/java-11-amazon-corretto.
+
+Edit tomcat.service again if needed:
+Bash
+
+    sudo vi /etc/systemd/system/tomcat.service
+
+    Ensure the Environment="JAVA_HOME=..." line is correct.
+
+    Save and reload daemon if changes were made.
+
+Step 3: Check Parent Directory Permissions
+
+The user tomkitty needs execute (traverse) permissions on all directories leading up to the Tomcat installation.
+
+    Check /home:
+    Bash
+
+ls -ld /home
+
+    Expected: drwxr-xr-x or similar. The x for group and others is important.
+
+Check /home/ec2-user:
+Bash
+
+ls -ld /home/ec2-user
+
+    Crucial: This directory is often drwx------ by default, meaning only ec2-user can traverse it. This is a common point of failure when trying to run services from a user's home directory with a different user.
+    If it's drwx------ for /home/ec2-user: You'll need to grant execute permissions for the tomkitty group/other.
+    Bash
+
+    sudo chmod o+x /home/ec2-user
+    # OR if you prefer to grant it only to tomkitty group:
+    # sudo usermod -aG tomkitty ec2-user  # (add ec2-user to tomkitty group)
+    # sudo chmod g+x /home/ec2-user
+
+    The simplest for testing is sudo chmod o+x /home/ec2-user.
+
+Check /home/ec2-user/apache-tomcat-9.0.106:
+Bash
+
+ls -ld /home/ec2-user/apache-tomcat-9.0.106
+
+    Ensure tomkitty user/group has r-x permissions (at least read and execute/traverse).
+    If not, use:
+    Bash
+
+        sudo chmod -R tomkitty:tomkitty /home/ec2-user/apache-tomcat-9.0.106
+        sudo chmod -R u+rwx,g+rx,o+rx /home/ec2-user/apache-tomcat-9.0.106
+
+After performing the above checks and making any necessary corrections:
+
+    Reload Systemd Daemon:
+    Bash
+
+sudo systemctl daemon-reload
+
+Start Tomcat Service:
+Bash
+
+sudo systemctl start tomcat
+
+Check Status Again:
+Bash
+
+sudo systemctl status tomcat
+
+Check journalctl for new errors:
+Bash
+
+    journalctl -xeu tomcat.service
+
+One of these steps should resolve the 203/EXEC error. The most common issues are incorrect User/Group in the service file or insufficient permissions on parent directories for the service user.
+
+/usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java so what i my JAVA_HOME
+
+Given the path /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java, your JAVA_HOME should be:
+
+/usr/lib/jvm/java-17-amazon-corretto.x86_64
+
+This is because JAVA_HOME should point to the root directory of your JDK installation, which is the parent directory of the bin directory containing the java executable.
+
+So, in your /etc/systemd/system/tomcat.service file, you should have:
+Ini, TOML
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64"
+
+solution to this
+
+    Query successful
+
+The Jenkins pipeline failed during the "Deploy to Tomcat" stage. The specific error message is:
+
+sudo: a terminal is required to read the password;
+either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+
+This indicates that the sudo systemctl stop tomcat command, which is being executed within the Jenkins pipeline's shell script, is prompting for a password. Jenkins, by default, runs in a non-interactive environment and cannot provide a password when prompted by sudo.
+
+To resolve this, you need to configure sudo to not require a password for the Jenkins user when executing specific commands, or for all commands if desired (though this is less secure).
+
+Here's the recommended solution:
+
+You need to modify the /etc/sudoers file on your EC2 instance where Jenkins is running to allow the Jenkins user to execute systemctl stop tomcat, systemctl start tomcat, and potentially systemctl restart tomcat without a password.
+
+Steps:
+
+    SSH into your EC2 instance:
+    Bash
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-public-ip
+
+(Replace with your actual key path and IP)
+
+Edit the sudoers file:
+It's critical to use visudo to edit the sudoers file to prevent syntax errors that could lock you out of sudo.
+Bash
+
+    sudo visudo
+
+    Add the following line to the end of the file:
+    This line allows the jenkins user to execute systemctl stop tomcat, systemctl start tomcat, and systemctl restart tomcat without a password.
+
+    jenkins ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop tomcat, /usr/bin/systemctl start tomcat, /usr/bin/systemctl restart tomcat
+
+        Explanation:
+            jenkins: This is the user that will be allowed to run the commands. Jenkins typically runs as the jenkins user.
+            ALL=(ALL): This means the jenkins user can run commands as any user and any group.
+            NOPASSWD:: This is the crucial part that tells sudo not to ask for a password.
+            /usr/bin/systemctl stop tomcat, /usr/bin/systemctl start tomcat, /usr/bin/systemctl restart tomcat: These are the specific commands that the jenkins user can run without a password. Make sure the paths to systemctl and the service name are correct. You can verify which systemctl to confirm its path.
+
+    Save and exit visudo:
+        If using vi (default for visudo), press Esc, then type :wq and press Enter.
+
+    Re-run the Jenkins pipeline.
+
+Alternative (Less Secure but Quicker for Testing):
+
+If you want to allow the jenkins user to run any sudo command without a password (less secure, not recommended for production):
+
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+However, the first solution, specifying only the necessary commands, is much safer.
+
+By adding this entry to your /etc/sudoers file, the sudo systemctl stop tomcat command in your Jenkins pipeline will no longer prompt for a password, allowing the pipeline to proceed and hopefully complete successfully.
+
+now what?
+
+    Query successful
+
+The Jenkins pipeline is failing for the same reason as before: a password prompt from sudo within a non-interactive environment.
+
+Specifically, the output shows:
+
+sudo: a terminal is required to read the password;
+either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+
+This is occurring during the "Deploy to Tomcat" stage when the pipeline attempts to execute two sudo commands:
+
+    sudo systemctl stop tomcat 
+
+sudo cp target/Boujock.war /home/ec2-user/apache-tomcat-9.0.106/webapps
+
+To resolve this, you need to configure the /etc/sudoers file on your EC2 instance to allow the jenkins user to execute these specific commands without a password.
+
+Here's what you need to do:
+
+    SSH into your EC2 instance:
+    Bash
+
+ssh -i /path/to/your-key.pem ec2-user@your-ec2-public-ip
+
+(Replace /path/to/your-key.pem with your private key file and your-ec2-public-ip with your instance's public IP address or DNS name).
+
+Edit the sudoers file using visudo:
+This is the safest way to edit the sudoers file to prevent syntax errors.
+Bash
+
+sudo visudo
+
+Add or modify the line for the jenkins user:
+You need to add entries for both systemctl commands and the cp command. If you already have a line for jenkins and systemctl, just append the cp command to it.
+
+Add this line to the end of the file:
+
+jenkins ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop tomcat, /usr/bin/systemctl start tomcat, /usr/bin/systemctl restart tomcat, /usr/bin/cp /var/lib/jenkins/workspace/boujock-pipeline/target/Boujock.war /home/ec2-user/apache-tomcat-9.0.106/webapps
+
+    Important considerations for the cp command:
+        Full path to cp: Ensure it's /usr/bin/cp (you can verify with which cp).
+        Full source path: The source path target/Boujock.war needs to be its absolute path from Jenkins' workspace. Based on your logs, the workspace is /var/lib/jenkins/workspace/boujock-pipeline/. So, the full source path is /var/lib/jenkins/workspace/boujock-pipeline/target/Boujock.war.
+
+            Full destination path: The destination path is /home/ec2-user/apache-tomcat-9.0.106/webapps.
+            Make sure there are no typos in any of these paths.
+
+    Save and exit visudo:
+        If using vi (default for visudo), press Esc, then type :wq and press Enter.
+
+    Re-run your Jenkins pipeline.
+
+By adding these specific commands to the NOPASSWD list for the jenkins user in sudoers, Jenkins will be able to execute them without being prompted for a password, resolving the sudo error.
+
+udo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+
+sudo: a password is required[Pipeline] }[Pipeline] // script[Pipeline] }[Pipeline] // withEnv[Pipeline] }[Pipeline] // stage[Pipeline] }[Pipeline] // withEnv[Pipeline] }[Pipeline] // withEnv[Pipeline] }[Pipeline] // node[Pipeline] End of PipelineERROR: script returned exit code 1
+
+Finished: FAILURE
+
+The Jenkins pipeline failed because the sudo command required a password, and the non-interactive Jenkins environment couldn't provide it. The error messages "sudo: a terminal is required to read the password" and "sudo: a password is required" indicate this problem.
+
+To resolve this, you need to configure the /etc/sudoers file on your EC2 instance to allow the jenkins user to run the necessary commands without a password.
+
+Here's the solution:
+
+    SSH into your EC2 instance.
+
+    Edit the sudoers file using visudo:
+    Bash
+
+sudo visudo
+
+(Using visudo is crucial to prevent syntax errors that could lock you out of sudo).
+
+Add or modify the following line in the /etc/sudoers file:
+This line allows the jenkins user to execute systemctl stop tomcat, systemctl start tomcat, systemctl restart tomcat, and the cp command without needing a password.
+
+jenkins ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop tomcat, /usr/bin/systemctl start tomcat, /usr/bin/systemctl restart tomcat, /usr/bin/cp /var/lib/jenkins/workspace/boujock-pipeline/target/Boujock.war /home/ec2-user/apache-tomcat-9.0.106/webapps
+
+    Verify paths: Ensure /usr/bin/systemctl and /usr/bin/cp are the correct absolute paths for these commands on your system.
+    Source and Destination Paths: The source path for the .war file is /var/lib/jenkins/workspace/boujock-pipeline/target/Boujock.war. The destination path for the .war file is /home/ec2-user/apache-tomcat-9.0.106/webapps.
+
+    Save and exit visudo:
+        If using vi (default for visudo), press Esc, then type :wq and press Enter.
+
+After making this change, re-run your Jenkins pipeline. It should now be able to execute the sudo commands without being prompted for a password.
+
+How to Verify paths: Ensure /usr/bin/systemctl and /usr/bin/cp are the correct absolute paths for these commands on my system.
+
+To verify the absolute paths of systemctl and cp on your Amazon Linux 2023 EC2 instance, you can use the which command in your SSH terminal.
+
+    Verify systemctl path:
+    Bash
+
+which systemctl
+
+This command will output the full path to the systemctl executable. It's almost always /usr/bin/systemctl on modern Linux systems, including Amazon Linux 2023.
+
+Verify cp path:
+Bash
+
+    which cp
+
+    Similarly, this command will output the full path to the cp executable. This is also commonly /usr/bin/cp.
+
+Example Output:
+Bash
+
+[ec2-user@ip-172-31-7-162 ~]$ which systemctl
+/usr/bin/systemctl
+[ec2-user@ip-172-31-7-162 ~]$ which cp
+/usr/bin/cp
+
+Whatever paths these commands return are the ones you should use in your /etc/sudoers file. In most cases, the /usr/bin/systemctl and /usr/bin/cp paths are indeed correct.
+
+deployment to tomcat successful, why isnt video not displaying on webpage and photo too
+
+    Query successful
+
+If your deployment to Tomcat was successful but videos and photos aren't displaying on the webpage, it usually points to a problem with how the web application is serving static content, or incorrect paths within your HTML/CSS.
+
+Based on the screenshot, your web application structure seems to be:
+
+src/main/webapp/
+├── WEB-INF/
+├── audio/
+├── images/
+│   ├── IMG-20241224-WA0007.jpg
+│   └── bottomName.jpg
+├── videos/
+│   ├── BoujeeWalk.mp4
+│   └── nameFlash.mp4
+├── about.html
+├── index.html
+├── index.jsp
+├── script.js
+├── script2.js
+├── styles.css
+└── styles2.css
+
+When Tomcat deploys a WAR file, it unpacks this webapp content (or serves it directly from the WAR) into a context path, usually related to the WAR file's name (e.g., Boujock.war might be accessible at http://your-server:8080/Boujock/).
+
+Here's a checklist of common reasons why images and videos might not display:
+
+1. Incorrect Paths in HTML/CSS:
+
+    Relative Paths: This is the most common issue. If your index.html or about.html references an image like <img src="images/bottomName.jpg">, this path is relative to the current HTML file.
+    Absolute Paths: If you use absolute paths, they must start from the root of your web application's context. For example, <img src="/Boujock/images/bottomName.jpg"> (assuming your webapp is deployed as Boujock.war).
+    Missing Leading Slash: When referencing resources from the root of your web application, ensure you include the leading slash. For example, src="/images/bottomName.jpg" would reference an image from the images folder at the root of your deployed web app (e.g., http://your-server:8080/Boujock/images/bottomName.jpg).
+    Check your HTML/CSS code:
+        Open your index.html, about.html, and any relevant CSS files (styles.css, styles2.css).
+        Look for src attributes in <img>, <video>, <audio> tags, and url() in CSS backgrounds.
+        Correct examples (assuming your webapp context is /Boujock or similar):
+            <img src="images/bottomName.jpg"> (if index.html is at the root)
+            <video controls src="videos/BoujeeWalk.mp4"></video> (if index.html is at the root)
+            Or, more robustly, using absolute paths from the webapp root:
+                <img src="/images/bottomName.jpg">
+                <video controls src="/videos/BoujeeWalk.mp4"></video>
+
+2. Case Sensitivity (Linux vs. Windows):
+
+    Linux file systems (which EC2 instances typically use) are case-sensitive. If your file is bottomName.jpg but your HTML has <img src="images/bottomname.jpg">, it won't be found. Double-check the casing of your filenames in your HTML/CSS against the actual filenames in your project structure (as seen in your GitHub screenshot).
+
+3. Permissions on Deployed Files:
+
+    While less common if Tomcat itself is running, sometimes the deployed files might have incorrect permissions that prevent Tomcat from reading them.
+    You can SSH into your EC2 instance and navigate to your Tomcat's webapps directory (e.g., /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/ if Boujock.war was deployed).
+    Check the permissions of the images and videos directories and the files within them:
+    Bash
+
+    ls -l /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/images/
+    ls -l /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/videos/
+
+    The tomcat user (or tomkitty in your case) needs read access to these files. Permissions like rw-r--r-- for files and rwxr-xr-x for directories are usually sufficient.
+
+4. Browser Cache:
+
+    Sometimes, browsers cache old content. Try a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) or clear your browser's cache for the site.
+
+5. Developer Tools Console (Most Helpful Debugging Tool):
+
+    Open your web page in a browser.
+    Right-click anywhere on the page and select "Inspect" or "Inspect Element" to open the browser's developer tools.
+    Go to the "Console" tab. Look for any error messages related to loading resources (e.g., "404 Not Found" errors for your image/video paths).
+    Go to the "Network" tab. Reload the page. You'll see a list of all resources being loaded. Look for your image and video files. If they show a "404 Not Found" status, the path is definitely wrong. If they show a "200 OK" but aren't displaying, it might be a rendering issue or a corrupted file (less likely if it works locally).
+
+Debugging Strategy:
+
+    Use Browser Developer Tools: This is your primary tool. The "Console" and "Network" tabs will tell you if the browser is even attempting to fetch the files and what response it's getting.
+    Verify Paths: Carefully compare the paths in your HTML/CSS to the actual deployed paths on Tomcat (e.g., http://your-server:8080/Boujock/images/bottomName.jpg). Try to access an image/video directly by typing its expected URL into your browser. If that URL gives a 404, the path is definitely incorrect.
+    Check webapps directory: Confirm that when Tomcat unpacks your Boujock.war, the images and videos directories and their contents are present within the deployed web app's folder (e.g., /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/images/).
+
+about page is not displaying image but file path is correct , what could be issue
+
+Even if the file path seems correct in your HTML, there are several subtle reasons why an image might not display, especially after deployment to a server like Tomcat. Since you've indicated the "about page" is the issue, let's focus on that.
+
+Here's a systematic approach to troubleshoot why your image isn't displaying:
+
+    Check Browser Developer Tools (Most Important Step):
+        Open your "about" page in a web browser.
+        Right-click anywhere on the page and select "Inspect" or "Inspect Element" to open the developer tools.
+        Go to the "Console" tab. Look for any error messages, especially "404 Not Found" or "Failed to load resource" related to your image file.
+        Go to the "Network" tab.
+            Reload the page (Ctrl+R or Cmd+R).
+            Filter by "Img" or "All".
+            Look for your image file in the list.
+            What is its "Status" code?
+                404 Not Found: This is the most common issue. It means the browser tried to request the image at a specific URL, but the server (Tomcat) couldn't find it there. This points to an incorrect URL in your HTML.
+                200 OK: If you see this, the image was successfully loaded by the browser. The problem is likely with how it's being displayed (e.g., CSS hiding it, incorrect dimensions, corrupted file, or overlapping elements).
+                Other codes (e.g., 403 Forbidden): Could indicate file permissions issues on the server.
+
+    Verify the Image Path in your about.html:
+
+        Context Path: When Tomcat deploys your Boujock.war, it's usually accessible at http://your-server:8080/Boujock/.
+
+        Relative Paths: If your about.html is at the root of your web application (e.g., http://your-server:8080/Boujock/about.html), and your image is in src/main/webapp/images/bottomName.jpg, then the path in your <img> tag should be:
+        HTML
+
+<img src="images/bottomName.jpg" alt="Description of image">
+
+This is a relative path, relative to the about.html file.
+
+Absolute Paths (from webapp root): A more robust way, especially if about.html might be in a subfolder, is to use a path relative to the web application's root (the context path).
+HTML
+
+    <img src="/images/bottomName.jpg" alt="Description of image">
+
+    The leading / means "from the root of the current web application". So, this would resolve to http://your-server:8080/Boujock/images/bottomName.jpg.
+
+    Double-check the exact spelling and casing: Linux file systems are case-sensitive. images/bottomName.jpg is different from images/bottomname.jpg. Ensure the path in your HTML exactly matches the filename and directory name.
+
+Confirm Image Presence in Deployed Webapp:
+
+    SSH into your EC2 instance.
+    Navigate to your Tomcat's webapps directory and then into your deployed application's folder (e.g., /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/).
+    Verify that the images directory exists there, and that your image file (bottomName.jpg or IMG-20241224-WA0007.jpg) is inside it.
+    Bash
+
+ls -l /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/images/
+
+Check Permissions: Ensure the tomkitty user (the user running Tomcat) has read permissions on the image file and read + execute permissions on the images directory and its parent directories within the deployed webapp.
+Bash
+
+        ls -l /home/ec2-user/apache-tomcat-9.0.106/webapps/Boujock/images/bottomName.jpg
+
+        (You should see r for the owner and group, and typically r for others).
+
+    Browser Cache:
+        Perform a hard refresh in your browser (Ctrl+Shift+R or Cmd+Shift+R) or clear your browser's cache for the specific website. Sometimes, old cached content can prevent new changes from showing.
+
+    CSS Interference:
+        Less likely for a complete non-display, but check your CSS files (styles.css, styles2.css) for rules that might be hiding the image (e.g., display: none;, visibility: hidden;, opacity: 0;, or z-index issues if other elements are covering it). Use the browser's "Elements" or "Inspector" tab in developer tools to select the <img> tag and check its computed styles.
+
+By following these steps, especially using the browser's developer tools, you should be able to pinpoint the exact reason why the image isn't appearing.
+
+edit this css to make this responsive for multiple types of screens: body {
+
+font-family: Arial, sans-serif;
+
+margin: 0;
+
+background-color: #020003;
+
+display: flex;
+
+flex-direction: column;
+
+min-height: 100vh;
+
+}
+
+/* keyframes for the glowing animation */
+
+@keyframes image-glow-beep {
+
+0% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+50% {
+
+text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+
+box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+
+}
+
+100% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+}
+
+
+
+@keyframes home-glow-beep{
+
+0% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+50% {
+
+text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+
+box-shadow: 0 0 15px rgba(181, 31, 211, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+
+}
+
+100% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+}
+
+
+
+
+@keyframes bio-glow-beep {
+
+0% {
+
+filter: drop-shadow(0 0 0 rgba(194, 36, 241, 0)) drop-shadow(0 0 0 rgba(51, 240, 45, 0));
+
+}
+
+50% {
+
+filter: drop-shadow(0 0 6px rgba(228, 56, 99, 0.7)) drop-shadow(0 0 6px rgba(23, 103, 223, 0.7));
+
+text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+
+}
+
+100% {
+
+filter: drop-shadow(0 0 0 rgba(194, 24, 236, 0)) drop-shadow(0 0 0 rgba(33, 46, 226, 0));
+
+}
+
+}
+
+
+@keyframes email-link-glow-beep {
+
+0% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+50% {
+
+text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+
+box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+
+}
+
+100% {
+
+text-shadow: none;
+
+box-shadow: none;
+
+}
+
+}
+
+
+
+.header {
+
+text-align: center;
+
+padding: 20px 0;
+
+background-color: #01030c;
+
+color: white;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+z-index: 20;
+
+}
+
+
+.header a, .header span {
+
+color: white;
+
+text-decoration: none;
+
+margin: 0 15px;
+
+padding: 10px 15px;
+
+border-radius: 5px;
+
+transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+animation: home-glow-beep 2s infinite ease-in-out;
+
+}
+
+
+
+.header a:hover, .header span:hover {
+
+text-shadow: 0 0 8px rgba(238, 234, 26, 0.8);
+
+box-shadow: 0 0 15px rgba(245, 4, 96, 0.5);
+
+}
+
+
+.about-content {
+
+flex-grow: 1;
+
+display: flex;
+
+justify-content:flex-end;
+
+flex-direction: row;
+
+align-items: center;
+
+text-align: center;
+
+padding: 50px;
+
+z-index: 10;
+
+width:80%;
+
+height: 60%;
+
+}
+
+
+.about-content img {
+
+border-radius: 50%; /* making the image round */
+
+width: 30%;
+
+height: 80%;
+
+object-fit: cover;
+
+margin-bottom: 20px;
+
+animation: image-glow-beep 1s infinite ease-in-out;
+
+}
+
+.bio{
+
+animation: bio-glow-beep 2s infinite ease-in-out;
+
+padding: 13px;
+
+width: 60%;
+
+height: 50%;
+
+color: white;
+
+justify-content: space-evenly;
+
+position: relative;
+
+font-style: italic;
+
+font-size: 1.2rem;
+
+
+}
+
+.email-link{
+
+position: relative;
+
+animation: email-link-glow-beep 0.3s infinite ease-in-out;
+
+color: white;
+
+}
+
+.footer {
+
+text-align: center;
+
+padding: 20px 0;
+
+background-color: #00030c;
+
+color: white;
+
+margin-top: auto; /* pushing footer to the bottom */
+
+z-index: 20;
+
+position: relative;
+
+}
+
+#cyberBackgroundCanvas {
+
+position: fixed; /* positioning absolutely to cover the background */
+
+top: 0;
+
+left: 0;
+
+width: 100%;
+
+height: 100%;
+
+z-index: 1; /* placing it behind other content but above body background*/
+
+pointer-events: none; /* allowing clicks to pass through to elements below*/
+
+}
+
+To make your CSS responsive for multiple screen types, we'll primarily use media queries, adjust units to be more flexible (like vw or percentages), and potentially introduce a hamburger menu for smaller screens if the header links become too crowded.
+
+Here's an edited version of your CSS with responsiveness in mind:
+CSS
+
+/* Base styles - these apply to all screen sizes */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #020003;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Keyframes remain the same as they are style definitions, not layout */
+@keyframes image-glow-beep {
+    0% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+        box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+    }
+    100% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
+
+@keyframes home-glow-beep {
+    0% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+        box-shadow: 0 0 15px rgba(181, 31, 211, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+    }
+    100% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
+
+@keyframes bio-glow-beep {
+    0% {
+        filter: drop-shadow(0 0 0 rgba(194, 36, 241, 0)) drop-shadow(0 0 0 rgba(51, 240, 45, 0));
+    }
+    50% {
+        filter: drop-shadow(0 0 6px rgba(228, 56, 99, 0.7)) drop-shadow(0 0 6px rgba(23, 103, 223, 0.7));
+        text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(153, 5, 158, 0.5);
+    }
+    100% {
+        filter: drop-shadow(0 0 0 rgba(194, 24, 236, 0)) drop-shadow(0 0 0 rgba(33, 46, 226, 0));
+    }
+}
+
+@keyframes email-link-glow-beep {
+    0% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(176, 124, 224, 0.7), 0 0 20px rgba(238, 55, 168, 0.5);
+        box-shadow: 0 0 15px rgba(238, 152, 224, 0.7), 0 0 25px rgba(223, 152, 217, 0.4);
+    }
+    100% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
+
+.header {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #01030c;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    flex-wrap: wrap; /* Allow header items to wrap on smaller screens */
+}
+
+.header a, .header span {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    animation: home-glow-beep 2s infinite ease-in-out;
+    white-space: nowrap; /* Prevent links from breaking mid-word */
+}
+
+.header a:hover, .header span:hover {
+    text-shadow: 0 0 8px rgba(238, 234, 26, 0.8);
+    box-shadow: 0 0 15px rgba(245, 4, 96, 0.5);
+}
+
+.about-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* Changed to center for better small screen layout */
+    flex-direction: row; /* Default for larger screens */
+    align-items: center;
+    text-align: center;
+    padding: 30px 20px; /* Adjusted padding for better spacing */
+    z-index: 10;
+    width: 90%; /* Use percentage for width */
+    max-width: 1200px; /* Max width to prevent content from stretching too wide on large screens */
+    margin: 0 auto; /* Center the content horizontally */
+}
+
+.about-content img {
+    border-radius: 50%;
+    width: 30%; /* Percentage for image width */
+    max-width: 300px; /* Add a max-width to prevent image from becoming too large */
+    height: auto; /* Use auto to maintain aspect ratio */
+    object-fit: cover;
+    margin-bottom: 20px;
+    animation: image-glow-beep 1s infinite ease-in-out;
+}
+
+.bio {
+    animation: bio-glow-beep 2s infinite ease-in-out;
+    padding: 15px; /* Adjusted padding */
+    width: 65%; /* Adjusted width to leave room for image */
+    color: white;
+    justify-content: space-evenly;
+    position: relative;
+    font-style: italic;
+    font-size: 1.1rem; /* Slightly smaller base font size */
+    line-height: 1.5; /* Improve readability */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.email-link {
+    position: relative;
+    animation: email-link-glow-beep 0.3s infinite ease-in-out;
+    color: white;
+    font-size: 1.1rem; /* Make sure the link is readable */
+    display: block; /* Ensure it takes its own line if needed */
+    margin-top: 15px; /* Add some space above it */
+}
+
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #00030c;
+    color: white;
+    margin-top: auto;
+    z-index: 20;
+    position: relative;
+    font-size: 0.9rem; /* Smaller font for footer */
+}
+
+#cyberBackgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* --- media Queries for responsiveness --- */
+
+/* tablets with up to 768px wide screens */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 0;
+    }
+
+    .header a, .header span {
+        margin: 0 10px;
+        padding: 8px 12px;
+        font-size: 0.95rem; 
+    }
+
+    .about-content {
+        flex-direction: column; /* arranges image and bio vertically */
+        padding: 30px 15px; 
+        width: 95%; /* allows more width on tablet */
+    }
+
+    .about-content img {
+        width: 40%; 
+        max-width: 250px;
+        margin-bottom: 25px;
+    }
+
+    .bio {
+        width: 90%; 
+        font-size: 1rem; 
+        padding: 10px;
+    }
+}
+
+/* mobile Phones with 480px wide screens */
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 0;
+        flex-direction: column; /* Stack header links */
+    }
+
+    .header a, .header span {
+        margin: 5px 0; /* Add vertical margin when stacked */
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    .about-content {
+        padding: 20px 10px;
+        width: 100%; 
+    }
+
+    .about-content img {
+        width: 60%; 
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .bio {
+        width: 100%; 
+        font-size: 0.9rem; 
+        padding: 8px;
+    }
+
+    .email-link {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+
+    .footer {
+        padding: 15px 0;
+        font-size: 0.8rem;
+    }
+}
+
