@@ -18,34 +18,20 @@
 
 <div class="main-content-wrapper">
         <div class="video-section">
-            <!--
-            - `id="boujeeVideo"`:ID for easy JavaScript targeting.
-            - `autoplay`: Starts playing the video automatically as soon as it can.
-            - `loop`: Makes the video repeat indefinitely.
-            - `muted`: Mutes the audio..
-            - `playsinline`: Recommended for iOS devices.
-            - `class="circular-video"`: applies the custom CSS for circular shape.
-            -->
+            
             <video id="boujeeVideo" autoplay loop muted playsinline class="circular-video">
-                <!--
-                changed from original path '/home/gono/Documents/Boujock/src/main/webapp/videos/boujeeWalk.mp4'
-                is a local file system path and will NOT work in a web browser.
-                -->
                 <source src="/Boujock/videos/boujeeWalk.mp4" type="video/mp4">
                 <!--  message if the browser does not support the video tag -->
                 Your browser does not support the video tag.
             </video>
         </div>
 
-        <!-- Container for the curved text SVG -->
+        <!-- container for the curved text SVG -->
         <div class="curved-text-container">
-            <!--
-            SVG element for the curved text:
-            - `viewBox="0 0 500 200"`: Defines the internal coordinate system for the SVG.
-            -->
-            <svg class="curved-text-svg" viewBox="0 0 500 200">
+            
+            <svg class="curved-text-svg" viewBox="0 0 1000 400">
                 <!--
-                The <path> element defines the curve that the text will follow.
+                    <path> element defines the curve that the text will follow.
                 -->
                 <path id="curve" fill="none" stroke="none"
                       d="M 60 50 A 250 250 0 0 0 440 40"/>
@@ -53,7 +39,7 @@
                       
                       
                 <!--
-                The <textPath> element makes text follow an SVG path.
+                    <textPath> element makes text follow an SVG path.
               -->
                 <text>
                     <textPath href="#curve" startOffset="0%" text-anchor="start">
