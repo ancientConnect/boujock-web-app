@@ -287,3 +287,7 @@ body {
         font-size: 0.75rem;
     }
 }
+/facts div
+    #peacock-facts-container{
+        z-index:20;    
+}
