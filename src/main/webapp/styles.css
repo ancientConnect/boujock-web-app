@@ -179,7 +179,7 @@ body {
 @media (min-width: 1600px) {
     .curved-text-container {
         width: 600px;
-        top: 320px; 
+        top: 500px; 
     }
     .curved-text-svg text {
         font-size: 3rem;
@@ -203,7 +203,7 @@ body {
         font-size: 0.9rem;
     }
     .curved-text-container {
-        top: 250px; 
+        top: 500px; 
         width: 450px;
     }
     .curved-text-svg text {
@@ -234,7 +234,7 @@ body {
         padding: 0 10px;
     }
     .curved-text-container {
-        top: 220px; 
+        top: 500px; 
         width: 100%; 
         max-width: 95vw;
     }
@@ -244,7 +244,7 @@ body {
         position:relative;
     }
     .circular-video {
-        width: 250px; 
+        width: 500px; 
         height: 250px;
     }
     .footer {
@@ -268,7 +268,7 @@ body {
         padding: 0 5px;
     }
     .curved-text-container {
-        top: 200px; 
+        top: 500px; 
         max-width: 98vw;
     }
     .curved-text-svg text {
