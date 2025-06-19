@@ -82,4 +82,59 @@
 
             // Start the animation loop
             setInterval(drawMatrix, 33); // Approximately 30 frames per second
+// the api data fetch
+        fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=Peacock&origin=*')
+    .then(response => response.json())
+    .then(data => {
+        const pages = data.query.pages;
+        const pageId = Object.keys(pages)[0]; // get the page ID
+        const extract = pages[pageId].extract; // get the extracted text
+
+        // Now, 'extract' contains the introductory text about peacocks.
+        // You can process this text to selectively display facts.
+        //console.log(extract);
+
+        // Call a function to display the facts on your screen
+        displayPeacockFacts(extract);
+    })
+    .catch(error => console.error('Error fetching data from Wikipedia:', error));
+
+        function displayPeacockFacts(text) {
+    const factsContainer = document.getElementById('peacock-facts-container'); // You'll need to add this div in your index.html
+    if (!factsContainer) {
+        console.error("Facts container not found!");
+        return;
+    }
+
+    // Example of splitting into sentences and filtering based on keywords
+    const sentences = text.split(/(?<=[.!?])\s+/); // Splits by common sentence endings
+    const relevantKeywords = ["species", "habitat", "diet", "feathers", "display"];
+    let selectedFacts = [];
+
+    sentences.forEach(sentence => {
+        // Simple check: if a sentence contains any of our keywords (case-insensitive)
+        const containsKeyword = relevantKeywords.some(keyword =>
+            sentence.toLowerCase().includes(keyword)
+        );
+
+        if (containsKeyword && selectedFacts.length < 3) { // Limit to 3 facts for display
+            selectedFacts.push(sentence);
+        }
+    });
+
+    if (selectedFacts.length === 0) {
+        factsContainer.innerHTML = "<p>Could not find specific facts, but here's the intro: " + text.substring(0, 200) + "...</p>";
+    } else {
+        factsContainer.innerHTML = "<h3>Interesting Peacock Facts:</h3>";
+        selectedFacts.forEach(fact => {
+            factsContainer.innerHTML += `<p>- ${fact}</p>`;
+        });
+    }
+}
+        
+        
         };
+
+
+
+
