@@ -39,7 +39,7 @@ pipeline {
 
                     // Copy the WAR file to Tomcat's webapps directory
                     // !!! IMPORTANT: Replace /path/to/tomcat/webapps/ with the actual path on your EC2 instance !!!
-                    sh 'sudo cp target/*.war /path/to/tomcat/webapps/'
+                    sh 'sudo cp target/*.war /home/ec2-user/apache-tomcat-9.0.106/webapps'
 
                     // Start Tomcat service
                     // Replace 'tomcat' with your actual Tomcat service name (e.g., 'tomcat9', 'tomcat8')
