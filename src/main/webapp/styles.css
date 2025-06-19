@@ -1,185 +1,282 @@
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #040f1b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* push header to top, footer to bottom */
+    align-items: center; 
+    margin: 0;
+    overflow-x: hidden; /*prevents horizontal scroll from elements like video and ext container */
+    padding: 0;
+}
 
-         /* tailwind CSS styling for body*/
-        body {
-            font-family: "Inter", sans-serif;
-            background-color: #040f1b; 
-            min-height: 100vh; /* Full viewport height */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* push header to top, footer to bottom */
-            align-items: center; /* centers content horizontally */
-            margin: 0;
-            overflow: hidden;
-            padding: 0;
-        }
+.header {
+    text-align: center;
+    padding: 10px 5px; 
+    background-color: #03000c;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    font-size: 1.5rem;
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    flex-wrap: wrap; /* allows header items to wrap to the next line */
+}
 
-        .header {
-            text-align: center;
-            padding: 5px 3px;
-            background-color: #03000c;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* low key shadow */
-            font-weight: bold;
-            font-size: 1.5rem;
-            width: 100%;
-            position: relative;
-            z-index: 20;
-        }
-         
-/* keyframes for the glowing beep animation */
-        @keyframes glow-beep {
-            0% {
-                text-shadow: none;
-                box-shadow: none;
-            }
-            50% {
-                text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
-                box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);    
-            
-            }
-            100% {
-                text-shadow: none;
-                box-shadow: none;
-            }
-        }
+/* keyframes for the glowing beep animation (remain unchanged) */
+@keyframes glow-beep {
+    0% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
+        box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);
+    }
+    100% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
+
 @keyframes svg-glow-beep {
-            0% {
-                filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
-            }
-            50% {
-         
-                filter: drop-shadow(0 0 6px rgba(106, 183, 235, 0.7)) drop-shadow(0 0 6px rgba(208, 241, 57, 0.7));
-            }
-            100% {
-                filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
-            }
-        }
-        @keyframes video-glow-beep {
-            0% {
-                text-shadow: none;
-                box-shadow: none;
-            }
-            50% {
-                text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
-                box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);    
-            
-            }
-            100% {
-                text-shadow: none;
-                box-shadow: none;
-            }
-        }
+    0% {
+        filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
+    }
+    50% {
+        filter: drop-shadow(0 0 6px rgba(106, 183, 235, 0.7)) drop-shadow(0 0 6px rgba(208, 241, 57, 0.7));
+    }
+    100% {
+        filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
+    }
+}
 
-        
+@keyframes video-glow-beep {
+    0% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(106, 183, 235, 0.7), 0 0 20px rgba(106, 183, 235, 0.5);
+        box-shadow: 0 0 15px rgba(208, 241, 57, 0.7), 0 0 25px rgba(208, 241, 57, 0.4);
+    }
+    100% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
 
-        .header a, .header span {
-            color: rgb(233, 218, 12); 
-            text-decoration: none;
-            margin: 0 15px;
-            padding: 10px 15px;
-            border-radius: 50%;
-            animation: glow-beep 1s infinite ease-in-out;/* applying the glowing animation */
-            transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /*transition for hover */
-        }
+.header a, .header span {
+    color: rgb(233, 218, 12);
+    text-decoration: none;
+    margin: 0 15px;
+    padding: 10px 15px;
+    border-radius: 50%;
+    animation: glow-beep 1s infinite ease-in-out;
+    transition: text-shadow 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    white-space: nowrap; /* prevents text from breaking lines */
+}
 
-        .header a:hover, .header span:hover {
-            text-shadow: 0 0 8px rgba(106, 183, 235, 0.8); 
-            box-shadow: 0 0 15px rgba(208, 241, 57, 0.5); 
-        }
+.header a:hover, .header span:hover {
+    text-shadow: 0 0 8px rgba(106, 183, 235, 0.8);
+    box-shadow: 0 0 15px rgba(208, 241, 57, 0.5);
+}
 
-        .main-content-wrapper {
-            position: relative; /* positions the curved text container */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1; /* allows it to take up available space */
-            margin: 2rem 0; /* adding some vertical margin */
-            z-index: 15;
-        }
+.main-content-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    margin: 2rem 0;
+    z-index: 15;
+    width: 100%; /* ensuring wrapper takes full width to center content properly*/
+    padding: 0 15px; /* prevents content from touching edges */
+    box-sizing: border-box; /* to include padding in width calculation */
+}
 
-        .curved-text-container {
-            position: absolute; /* position relative to .main-content-wrapper */
-            top: 290px; /*pushes the text further down */
-            left: 50%;
-            transform: translateX(-50%); /* center horizontally */
-            width: 500px; 
-            height: 200px;
-            max-width: 90vw; /* Takes max 90% of viewport width */
-            height: auto; /* allows height to adjust proportionally based on width */
-            overflow: visible;
-            z-index: 5; /* ensure text is behind the video, so it curves around */
-        }
+.curved-text-container {
+    position: absolute;
+    top: 290px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    max-width: 90vw; /*  takes max 90% of viewport width */
+    height: auto; /* height will adjust accordingly based on content */
+    overflow: hidden; /* changing from visible to hidden for better text clipping if needed */
+    z-index: 5;
+    text-align: center; /* centering the text within its container */
+}
 
-         /* Styling for the SVG text */
-        .curved-text-svg text {
-            font-family: "Inter", sans-serif; 
-            font-size: 2.5rem; 
-            font-weight: bold;
-            fill: #dfeb3d; 
-            letter-spacing: 0.01em;
-            animation: svg-glow-beep 1s infinite ease-in-out;
-        }
+.curved-text-svg {
+    display: block; /* ensures SVG behaves as a block element */
+    width: 100%; /* makes SVG responsive to its container width */
+    height: auto; /* maintains aspect ratio */
+}
 
-        
+.curved-text-svg text {
+    font-family: "Inter", sans-serif;
+    font-size: 2.5rem; 
+    font-weight: bold;
+    fill: #dfeb3d;
+    letter-spacing: 0.01em;
+    animation: svg-glow-beep 1s infinite ease-in-out;
+}
+
+.circular-video {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 350px;
+    height: 350px; 
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    z-index: 10;
+    animation: video-glow-beep 2s infinite ease-in-out;
+    max-width: 90vw; /* ensuring video doesn't overflow like a flood on very small screens */
+    max-height: 90vw; /* maintains aspect ratio as square */
+}
+
+#cyberBackgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.image-section img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.footer {
+    text-align: center;
+    background-color: #03000c;
+    color: white;
+    margin-top: auto;
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.9rem;
+    z-index: 20;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/*media queries for responsiveness*/
+
+/* larger desktops*/
+@media (min-width: 1600px) {
+    .curved-text-container {
+        width: 600px; 
+        top: 320px;
+    }
+    .curved-text-svg text {
+        font-size: 3rem;
+    }
+    .circular-video {
+        width: 400px;
+        height: 400px;
+    }
+}
 
 
-        .circular-video {
-            border-radius: 50%; /* making the video circular */
-            object-fit: cover; /* ensuring the video content covers the circular area */
-            width: 350px; /*width for circular video */
-            height: 350px; /*height for circular video (must match width for perfect circle) */
-            display: block; /* ensuring it behaves as a block element */
-            margin: 0 auto; /* centering the video horizontally within its container */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23); /* adding a low key cool shadow */
-            z-index: 10;
-            animation: video-glow-beep 2s infinite ease-in-out;
-        }
-         #cyberBackgroundCanvas {
-            position: fixed; /* absolute positioning to cover the background */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* placing it behind other content but above body background */
-            pointer-events: none; /* ensuring clicks to pass through to elements below */
-        }
-        @media (max-width: 640px) {
-            .circular-video {
-                  /* Smaller height and width for mobile */
-                width: 200px; 
-                height: 200px; 
-            }
-            .curved-text-container {
-                top: 170px; /* pushing text down*/
-                width: 100%; /* taking full width*/
-            }
-            .curved-text-svg text {
-                font-size: 1.8rem; /* smaller font*/
-            }
-        }
-        
+/* tablets and smaller desktops from 768px to 1024px*/
+@media (max-width: 1024px) {
+    .header {
+        font-size: 1.3rem;
+        padding: 8px 5px;
+    }
+    .header a, .header span {
+        margin: 0 10px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .curved-text-container {
+        top: 250px; 
+        width: 450px;
+    }
+    .curved-text-svg text {
+        font-size: 2.2rem;
+    }
+    .circular-video {
+        width: 300px;
+        height: 300px;
+    }
+}
 
+/* small Tablets and large phones from 640px to 767px*/
+@media (max-width: 767px) {
+    .header {
+        font-size: 1.2rem;
+        flex-direction: column; /* arranging header items vertically */
+        padding: 10px 0;
+    }
+    .header a, .header span {
+        margin: 5px 0; 
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+    .main-content-wrapper {
+        margin: 1rem 0;
+        padding: 0 10px;
+    }
+    .curved-text-container {
+        top: 200px; 
+        width: 100%; 
+        max-width: 95vw;
+    }
+    .curved-text-svg text {
+        font-size: 1.8rem;
+    }
+    .circular-video {
+        width: 250px;
+        height: 250px;
+    }
+    .footer {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+    }
+}
 
-        .image-section img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto; /* centering the image */
-        }
-
-        .footer {
-            text-align: center;
-            background-color: #03000c;
-            color: white;
-            margin-top: auto; /* pushing footer to the bottom */
-             width: 100%;
-            padding: 1rem;
-            font-size: 0.9rem;
-            z-index: 20;
-            position: relative;
-        }
-
-        
+/* mobile phones with max-width: 480px*/
+@media (max-width: 480px) {
+    .header {
+        font-size: 1rem;
+        padding: 8px 0;
+    }
+    .header a, .header span {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+    .main-content-wrapper {
+        margin: 0.5rem 0;
+        padding: 0 5px;
+    }
+    .curved-text-container {
+        top: 170px;
+        max-width: 98vw;
+    }
+    .curved-text-svg text {
+        font-size: 1.5rem; 
+    }
+    .circular-video {
+        width: 200px; 
+        height: 200px;
+        max-width: 90vw; /* maintains viewport width */
+        max-height: 90vw; /* corresponding viewport height for square ratio */
+    }
+    .footer {
+        padding: 0.6rem;
+        font-size: 0.75rem;
+    }
+}
