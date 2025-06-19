@@ -92,7 +92,7 @@
 
         // Now, 'extract' contains the introductory text about peacocks.
         // You can process this text to selectively display facts.
-        //console.log(extract);
+        console.log(extract);
 
         // Call a function to display the facts on your screen
         displayPeacockFacts(extract);
