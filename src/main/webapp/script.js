@@ -94,8 +94,8 @@ const TOPICS = [
     "Continuous delivery",
     "Microservices",
     "Cloud computing",
-    "Site reliability engineering"
-    "Container"
+    "Site reliability engineering",
+    "Container",
     "Deployment"
 ];
 
@@ -152,7 +152,7 @@ function displayTopicFacts(text, topicTitle) {
                               "collaboration", "integration", "delivery", "cicd", "continuous",
                               "principles", "workflow", "methodology", "practices", "software",
                               "system", "application", "development", "operations", "infrastructure",
-                              "cloud", "agile", "testing", "monitoring","container","deployment","testing"];
+                              "cloud", "agile", "testing", "monitoring","container","deployment"];
 
     // setting the maximum character length for displayed facts
     const MAX_FACT_LENGTH = 180; 
