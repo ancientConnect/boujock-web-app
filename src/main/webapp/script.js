@@ -109,12 +109,12 @@ const TOPICS = [
     "automation",
     "API",
     "database",
-    "Terraform",
+    "Terraform software",
     "Kubernetes",
     "Directory",
-    "network",
-    "Operating System",
-    "Open Source",
+    "GNU",
+    "branch",
+    "commit",
     "web server",
     "Virtual machine"
 ];
