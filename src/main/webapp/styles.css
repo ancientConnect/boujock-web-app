@@ -44,17 +44,6 @@ body {
     }
 }
 
-@keyframes svg-glow-beep {
-    0% {
-        filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
-    }
-    50% {
-        filter: drop-shadow(0 0 6px rgba(106, 183, 235, 0.7)) drop-shadow(0 0 6px rgba(208, 241, 57, 0.7));
-    }
-    100% {
-        filter: drop-shadow(0 0 0 rgba(106, 183, 235, 0)) drop-shadow(0 0 0 rgba(208, 241, 57, 0));
-    }
-}
 
 @keyframes video-glow-beep {
     0% {
@@ -98,35 +87,6 @@ body {
     width: 100%; /* ensures wrapper takes full width to center content properly */
     padding: 0 15px; /*  horizontal padding to prevent content from touching edges */
     box-sizing: border-box;
-}
-
-.curved-text-container {
-    position: absolute;
-    top: 290px; 
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    max-width: 90vw; 
-    height: auto; /* allows height to adjust proportionally based on width */
-    overflow: hidden; /* to better manage text clipping */
-    z-index: 5;
-    text-align: center; /* centers the text within its container */
-}
-
-/* Styling for the SVG text */
-.curved-text-svg {
-    display: block; /* ensures SVG behaves as a block element */
-    width: 100%; /* makes SVG responsive to its container width */
-    height: auto; /* maintains aspect ratio */
-}
-
-.curved-text-svg text {
-    font-family: "Inter", sans-serif;
-    font-size: 2.5rem;
-    font-weight: bold;
-    fill: #dfeb3d;
-    letter-spacing: 0.01em;
-    animation: svg-glow-beep 1s infinite ease-in-out;
 }
 
 .circular-video {
@@ -177,13 +137,6 @@ body {
 
 /* larger Desktops */
 @media (min-width: 1600px) {
-    .curved-text-container {
-        width: 600px;
-        top: 500px; 
-    }
-    .curved-text-svg text {
-        font-size: 3rem;
-    }
     .circular-video {
         width: 400px;
         height: 400px;
@@ -202,16 +155,7 @@ body {
         padding: 8px 12px;
         font-size: 0.9rem;
     }
-    .curved-text-container {
-        top: 500px; 
-        width: 450px;
-    }
-    .curved-text-svg text {
-        font-size: 2.2rem;
-        position: relative;
-        top:50px;
-    }
-    .circular-video {
+        .circular-video {
         width: 300px;
         height: 300px;
     }
@@ -233,16 +177,7 @@ body {
         margin: 1rem 0;
         padding: 0 10px;
     }
-    .curved-text-container {
-        top: 500px; 
-        width: 100%; 
-        max-width: 95vw;
-    }
-    .curved-text-svg text {
-        font-size: 1.5rem;
-        top:100px;
-        position:relative;
-    }
+    
     .circular-video {
         width: 500px; 
         height: 250px;
@@ -267,15 +202,7 @@ body {
         margin: 0.5rem 0;
         padding: 0 5px;
     }
-    .curved-text-container {
-        top: 500px; 
-        max-width: 98vw;
-    }
-    .curved-text-svg text {
-        font-size: 1.2rem;
-        top:150px;
-        position:relative;
-    }
+    
     .circular-video {
         width: 200px; 
         height: 200px;
