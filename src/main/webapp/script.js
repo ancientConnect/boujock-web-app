@@ -79,7 +79,7 @@
             }
 
             // starting the animation loop
-setInterval(drawMatrix, 33); // this sets about 30 frames per second
+        setInterval(drawMatrix, 33); // this sets about 30 frames per second
 
 // fetching data from the Wikipedia API on DevOps
 // setting the global variables to store the full DevOps extract once fetched
@@ -247,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // setting up the interval to cycle topics every 8 seconds i.e 8000 ms
 setInterval(cycleTopics, 8000);        
         };
-
 
 
 
