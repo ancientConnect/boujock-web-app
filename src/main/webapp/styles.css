@@ -302,6 +302,9 @@ body {
     width: 90%; 
     text-align: center; 
     display: block; 
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+    opacity: 1; /* Start visible */
+    visibility: visible; /* Start visible */
 }
 
 #devops-facts-container h3 {
