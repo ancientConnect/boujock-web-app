@@ -86,12 +86,6 @@
         // Fetch data from the Wikipedia API for "DevOps"
         // Global variable to store the full DevOps extract once fetched
 let fullDevOpsExtract = "";
-let currentFactIndex = 0; // To keep track of which set of facts we're showing
-
-// Function to fetch data from the Wikipedia API for "DevOps"
-// Global variable to store the full DevOps extract once fetched
-let fullDevOpsExtract = "";
-let currentFactIndex = 0; // To keep track of which set of facts we're showing
 
 // Function to fetch data from the Wikipedia API for "DevOps"
 function fetchDevOpsFacts() {
@@ -104,7 +98,7 @@ function fetchDevOpsFacts() {
 
             // Store the full extract globally
             fullDevOpsExtract = extract;
-            console.log("Full Wikipedia Extract (DevOps):", fullDevOpsExtract);
+            console.log("Full Wikipedia Extract (DevOps):", fullDevOpsExtract); // IMPORTANT: Check this in console!
 
             // Immediately display the first set of facts
             displayDevOpsFacts(fullDevOpsExtract);
@@ -120,15 +114,21 @@ function displayDevOpsFacts(text) {
         return;
     }
 
-    // Define keywords relevant to DevOps
-    const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous", "principles", "workflow"];
-    let allPotentialFacts = []; // Store all sentences that contain keywords
+    // --- Start of modifications for shorter sentences ---
 
-    // Define a maximum character length for displayed facts
-    const MAX_FACT_LENGTH = 120; // You can adjust this value as needed
+    // Define keywords relevant to DevOps
+    const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous", "principles", "workflow", "methodology"]; // Added 'methodology'
+
+    // New: Define a slightly more generous maximum character length for displayed facts
+    const MAX_FACT_LENGTH = 160; // Increased from 120 to 160 characters
+
+    let allPotentialFacts = []; // Store all sentences that contain keywords
 
     // Split the text into individual sentences
     const sentences = text.split(/(?<=[.!?])\s+/);
+
+    // Log split sentences for debugging
+    console.log("All sentences after split:", sentences);
 
     // Filter sentences that contain any of our keywords
     sentences.forEach(sentence => {
@@ -140,42 +140,52 @@ function displayDevOpsFacts(text) {
         }
     });
 
+    // Log potential facts for debugging
+    console.log("Potential facts (with keywords):", allPotentialFacts);
+
     let selectedFacts = [];
 
-    // If we have potential facts, select a random subset
+    // If we have potential facts, select a subset and process for length
     if (allPotentialFacts.length > 0) {
-        // Step 1: Prioritize shorter sentences
-        // Sort by length in ascending order (shortest first)
+        // Step 1: Sort by length in ascending order (shortest first).
+        // This prioritizes naturally shorter sentences.
         allPotentialFacts.sort((a, b) => a.length - b.length);
 
-        // Step 2: Select up to 5 shortest facts that meet the keyword criteria
-        // (We might need more than 3 initially if some are too long after truncation)
-        let tempFacts = allPotentialFacts.slice(0, Math.min(allPotentialFacts.length, 5));
+        // Step 2: Iterate through potential facts and select up to 3,
+        // applying truncation if necessary.
+        for (let i = 0; i < allPotentialFacts.length && selectedFacts.length < 3; i++) {
+            let currentFact = allPotentialFacts[i];
+            let processedFact = currentFact;
 
-        // Step 3: Truncate if necessary and add to final selection
-        tempFacts.forEach(fact => {
-            if (selectedFacts.length < 3) { // Only add up to 3 final facts
-                let processedFact = fact;
-                if (processedFact.length > MAX_FACT_LENGTH) {
-                    // Truncate and add ellipsis, ensure it ends cleanly
-                    processedFact = processedFact.substring(0, MAX_FACT_LENGTH).trim();
-                    // Avoid cutting off in the middle of a word if possible
-                    const lastSpaceIndex = processedFact.lastIndexOf(' ');
-                    if (lastSpaceIndex > MAX_FACT_LENGTH - 20) { // If last word is too long
-                        processedFact = processedFact.substring(0, lastSpaceIndex);
-                    }
+            // Simple truncation: if too long, cut and add ellipsis.
+            // This is less aggressive about not cutting words to ensure content is shown.
+            if (currentFact.length > MAX_FACT_LENGTH) {
+                processedFact = currentFact.substring(0, MAX_FACT_LENGTH).trim();
+                // Add ellipsis only if it was actually truncated
+                if (processedFact.length < currentFact.length) {
                     processedFact += '...';
                 }
-                selectedFacts.push(processedFact);
             }
-        });
+            selectedFacts.push(processedFact);
+        }
     }
+
+    // Log the final selected facts for debugging
+    console.log("Final selected facts:", selectedFacts);
+
+    // --- End of modifications for shorter sentences ---
+
 
     // Update the content of the facts container
     if (selectedFacts.length === 0) {
         // Fallback: If no specific facts or too few found, display a truncated intro
-        let introText = text.substring(0, 300);
-        if (introText.length >= 300) introText += '...';
+        // Ensure there's always *some* text in the fallback
+        let introText = text.substring(0, 300); // Get first 300 chars
+        if (introText.length > 0 && introText.length < text.length) { // Add ellipsis if original text was longer
+            introText += '...';
+        } else if (introText.length === 0 && text.length === 0) {
+            introText = "No introductory information available from Wikipedia at this time.";
+        }
         factsContainer.innerHTML = `<p>Could not find specific facts, but here's the intro about DevOps: ${introText}</p>`;
     } else {
         // If facts were found, display them with a heading
@@ -203,11 +213,11 @@ function cycleDevOpsFacts() {
     // Step 2: Wait for fade-out, then update content and fade in
     setTimeout(() => {
         // If the full extract is available, display a new set of random facts
-        if (fullDevOpsExtract) {
+        // Otherwise, re-fetch the extract (e.g., on first load or if empty)
+        if (fullDevOpsExtract && fullDevOpsExtract.length > 0) {
             displayDevOpsFacts(fullDevOpsExtract);
         } else {
-            // If the extract isn't loaded yet (first run or error), re-fetch
-            fetchDevOpsFacts();
+            fetchDevOpsFacts(); // Re-fetch if extract is empty
         }
         // The displayDevOpsFacts function will set opacity back to 1 and visibility to visible
     }, 1000); // Wait 1 second (should match your CSS transition duration)
