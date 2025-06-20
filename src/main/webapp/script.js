@@ -96,7 +96,16 @@ const TOPICS = [
     "Cloud computing",
     "Site reliability engineering",
     "Container",
-    "Deployment"
+    "Deployment",
+    "Network Threats",
+    "Malware",
+    "Linux",
+    "Hacking",
+    "Docker",
+    "Apache",
+    "Jenkins",
+    "Gradle",
+    "AWS"
 ];
 
 // function to fetch and display data for a specific topic
