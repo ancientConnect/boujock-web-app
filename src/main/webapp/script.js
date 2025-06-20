@@ -84,72 +84,108 @@
             setInterval(drawMatrix, 33); // Approximately 30 frames per second
 // the api data fetch
         // Fetch data from the Wikipedia API for "DevOps"
-fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=DevOps&origin=*')
-    // Once the response is received, convert it to JSON format
-    .then(response => response.json())
-    // Process the JSON data
-    .then(data => {
-        // Access the 'pages' object from the Wikipedia response
-        const pages = data.query.pages;
-        // Get the ID of the first page returned (which should be DevOps)
-        const pageId = Object.keys(pages)[0];
-        // Get the introductory text (extract) from that page
-        const extract = pages[pageId].extract;
+        // Global variable to store the full DevOps extract once fetched
+let fullDevOpsExtract = "";
+let currentFactIndex = 0; // To keep track of which set of facts we're showing
 
-        // Log the full extracted text to the console for debugging
-        console.log("Full Wikipedia Extract (DevOps):", extract);
+// Function to fetch data from the Wikipedia API for "DevOps"
+function fetchDevOpsFacts() {
+    fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=DevOps&origin=*')
+        .then(response => response.json())
+        .then(data => {
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages)[0];
+            const extract = pages[pageId].extract;
 
-        // Call a function to display the relevant facts on the screen
-        displayDevOpsFacts(extract);
-    })
-    // Catch any errors that occur during the fetch operation
-    .catch(error => console.error('Error fetching data from Wikipedia:', error));
+            // Store the full extract globally
+            fullDevOpsExtract = extract;
+            console.log("Full Wikipedia Extract (DevOps):", fullDevOpsExtract);
+
+            // Immediately display the first set of facts
+            displayDevOpsFacts(fullDevOpsExtract);
+        })
+        .catch(error => console.error('Error fetching data from Wikipedia:', error));
+}
 
 // Function to display the extracted facts about DevOps
 function displayDevOpsFacts(text) {
-    // Get the HTML element where facts will be displayed
-    const factsContainer = document.getElementById('devops-facts-container'); // Make sure this div exists in your HTML!
-
-    // If the container element is not found, log an error and stop
+    const factsContainer = document.getElementById('devops-facts-container');
     if (!factsContainer) {
         console.error("DevOps facts container not found in HTML!");
         return;
     }
 
     // Define keywords relevant to DevOps
-    const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous"];
-    let selectedFacts = []; // Array to store selected sentences
+    const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous", "principles", "workflow"];
+    let allPotentialFacts = []; // Store all sentences that contain keywords
 
     // Split the text into individual sentences
     const sentences = text.split(/(?<=[.!?])\s+/);
 
-    // Loop through each sentence to find relevant facts
+    // Filter sentences that contain any of our keywords
     sentences.forEach(sentence => {
-        // Check if the sentence contains any of the defined keywords (case-insensitive)
         const containsKeyword = relevantKeywords.some(keyword =>
             sentence.toLowerCase().includes(keyword)
         );
-
-        // If a keyword is found and we haven't reached our limit, add the sentence to selected facts
-        if (containsKeyword && selectedFacts.length < 3) { // Limit to 3 facts for display
-            selectedFacts.push(sentence);
+        if (containsKeyword) {
+            allPotentialFacts.push(sentence);
         }
     });
 
-    // If no specific facts were found based on keywords
+    let selectedFacts = [];
+
+    // If we have potential facts, select a random subset
+    if (allPotentialFacts.length > 0) {
+        // Shuffle the array to get random facts each time
+        allPotentialFacts.sort(() => Math.random() - 0.5);
+
+        // Select the first 3 (or fewer if not enough) random facts
+        selectedFacts = allPotentialFacts.slice(0, 3);
+    }
+
+    // Update the content of the facts container
     if (selectedFacts.length === 0) {
-        // Display a fallback message with a portion of the introductory text
         factsContainer.innerHTML = `<p>Could not find specific facts, but here's the intro about DevOps: ${text.substring(0, 300)}...</p>`;
     } else {
-        // If facts were found, display them with a heading
         factsContainer.innerHTML = "<h3>Interesting DevOps Facts:</h3>";
-        // Add each selected fact as a paragraph
         selectedFacts.forEach(fact => {
             factsContainer.innerHTML += `<p>- ${fact}</p>`;
         });
     }
+
+    // After updating content, make sure it's visible (if hidden by animation)
+    factsContainer.style.opacity = '1';
+    factsContainer.style.visibility = 'visible';
 }
-        
+
+// Function to manage the appearance, disappearance, and refresh
+function cycleDevOpsFacts() {
+    const factsContainer = document.getElementById('devops-facts-container');
+    if (!factsContainer) return; // Exit if container not found
+
+    // Step 1: Fade out the current facts
+    factsContainer.style.opacity = '0';
+    factsContainer.style.visibility = 'hidden'; // Hide element after fade
+
+    // Step 2: Wait for fade-out, then update content and fade in
+    setTimeout(() => {
+        // If the full extract is available, display a new set of random facts
+        if (fullDevOpsExtract) {
+            displayDevOpsFacts(fullDevOpsExtract);
+        } else {
+            // If the extract isn't loaded yet (first run or error), re-fetch
+            fetchDevOpsFacts();
+        }
+        // The displayDevOpsFacts function will set opacity back to 1 and visibility to visible
+    }, 1000); // Wait 1 second (should match your CSS transition duration)
+}
+
+// Initial fetch of facts when the page loads
+document.addEventListener('DOMContentLoaded', fetchDevOpsFacts);
+
+// Set up the interval to cycle facts every 5 seconds (5000 milliseconds)
+// The 1-second delay inside setTimeout ensures the fade-out completes before new content appears.
+setInterval(cycleDevOpsFacts, 5000);
         
         };
 
