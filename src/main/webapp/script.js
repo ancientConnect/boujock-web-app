@@ -109,14 +109,15 @@ const TOPICS = [
     "automation",
     "API",
     "database",
-    "Terraform software",
+    "Windows",
     "Kubernetes",
     "Directory",
     "GNU",
-    "branch",
-    "commit",
+    "network protocol",
+    "Scrum",
     "web server",
-    "Virtual machine"
+    "Virtual machine",
+    "Kanban"
 ];
 
 // function to fetch and display data for a specific topic
