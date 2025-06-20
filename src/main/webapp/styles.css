@@ -287,16 +287,30 @@ body {
         font-size: 0.75rem;
     }
 }
-/facts div
-    .devops-facts-container{
-        top: 50px;
-        bottom: 50px;
-        z-index: 10;
-        color: white;
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        align-self: center;
-        font-size: 1.1rem;
-        object-fit: cover;
+
+/* Styling for the DevOps facts container */
+#devops-facts-container { 
+    position: relative; 
+    z-index: 15;        
+    color: white; 
+    background-color: rgba(4, 15, 27, 0.8); 
+    padding: 20px;      
+    margin: 20px auto;  
+    border-radius: 8px; 
+    box-shadow: 0 0 15px rgba(208, 241, 57, 0.4), 0 0 25px rgba(106, 183, 235, 0.3);
+    max-width: 800px;   
+    width: 90%; 
+    text-align: center; 
+    display: block; 
+}
+
+#devops-facts-container h3 {
+    color: #dfeb3d; /* Adjust heading color for contrast */
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(208, 241, 57, 0.7); /* Small text shadow for heading */
+}
+
+#devops-facts-container p {
+    line-height: 1.6;
+    margin-bottom: 10px;
 }
