@@ -106,15 +106,17 @@ const TOPICS = [
     "CI/CD",
     "Gradle",
     "SDLC",
-    "Automation",
-    "configuration,
-    "Database",
+    "automation",
+    "configuration",
+    "database",
     "Terraform",
     "Kubernetes",
     "Directory",
     "installation",
     "command",
-    "interface"
+    "interface",
+    "web server",
+    "jenkins pipeline"
 ];
 
 // function to fetch and display data for a specific topic
