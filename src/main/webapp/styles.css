@@ -289,11 +289,14 @@ body {
 }
 /facts div
     .devops-facts-container{
-        z-index:25;
-        color:white;
-        align-items:center;
-        display:flex;
-        justify-content:center;
-        
-        font-size:1.1rem;
+        top: 50px;
+        bottom: 50px;
+        z-index: 10;
+        color: white;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        font-size: 1.1rem;
+        object-fit: cover;
 }
