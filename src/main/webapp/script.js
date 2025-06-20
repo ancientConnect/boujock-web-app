@@ -123,7 +123,7 @@
             
         }
     });
-    console.log("Selected Facts:", selectedFacts); // See what facts were actually picked
+    console.log("Selected Facts are:", selectedFacts); // See what facts were actually picked
 
     if (selectedFacts.length === 0) {
         factsContainer.innerHTML = "<p>Could not find specific facts, but here's the intro: " + text.substring(0, 200) + "...</p>";
