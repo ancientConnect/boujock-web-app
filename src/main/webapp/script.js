@@ -83,52 +83,67 @@
             // Start the animation loop
             setInterval(drawMatrix, 33); // Approximately 30 frames per second
 // the api data fetch
-        fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=Peacock&origin=*')
+        // Fetch data from the Wikipedia API for "DevOps"
+fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=DevOps&origin=*')
+    // Once the response is received, convert it to JSON format
     .then(response => response.json())
+    // Process the JSON data
     .then(data => {
+        // Access the 'pages' object from the Wikipedia response
         const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0]; // get the page ID
-        const extract = pages[pageId].extract; // get the extracted text
+        // Get the ID of the first page returned (which should be DevOps)
+        const pageId = Object.keys(pages)[0];
+        // Get the introductory text (extract) from that page
+        const extract = pages[pageId].extract;
 
-        // Now, 'extract' contains the introductory text about peacocks.
-        // You can process this text to selectively display facts.
-        console.log("Full Wikipedia Extract:", extract); // Check what 
-        // Call a function to display the facts on your screen
-        displayPeacockFacts(extract);
+        // Log the full extracted text to the console for debugging
+        console.log("Full Wikipedia Extract (DevOps):", extract);
+
+        // Call a function to display the relevant facts on the screen
+        displayDevOpsFacts(extract);
     })
+    // Catch any errors that occur during the fetch operation
     .catch(error => console.error('Error fetching data from Wikipedia:', error));
 
-        function displayPeacockFacts(text) {
-    const factsContainer = document.getElementById('peacock-facts-container'); // You'll need to add this div in your index.html
+// Function to display the extracted facts about DevOps
+function displayDevOpsFacts(text) {
+    // Get the HTML element where facts will be displayed
+    const factsContainer = document.getElementById('devops-facts-container'); // Make sure this div exists in your HTML!
+
+    // If the container element is not found, log an error and stop
     if (!factsContainer) {
-        console.error("Facts container not found!");
+        console.error("DevOps facts container not found in HTML!");
         return;
     }
 
-    // Example of splitting into sentences and filtering based on keywords
-    const sentences = text.split(/(?<=[.!?])\s+/); // Splits by common sentence endings
-    console.log(sentences); // See how the text is broken down
-    const relevantKeywords = [ "feathers", "plumage", "tail", "found in", "native to", "region", "species", "habitat", "diet", "feathers", "display"];
-    console.log("Keywords:", relevantKeywords); // Just to confirm
-    let selectedFacts = [];
+    // Define keywords relevant to DevOps
+    const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous"];
+    let selectedFacts = []; // Array to store selected sentences
 
+    // Split the text into individual sentences
+    const sentences = text.split(/(?<=[.!?])\s+/);
+
+    // Loop through each sentence to find relevant facts
     sentences.forEach(sentence => {
-        // Simple check: if a sentence contains any of our keywords (case-insensitive)
+        // Check if the sentence contains any of the defined keywords (case-insensitive)
         const containsKeyword = relevantKeywords.some(keyword =>
             sentence.toLowerCase().includes(keyword)
         );
 
+        // If a keyword is found and we haven't reached our limit, add the sentence to selected facts
         if (containsKeyword && selectedFacts.length < 3) { // Limit to 3 facts for display
             selectedFacts.push(sentence);
-            
         }
     });
-    console.log("Selected Facts are:", selectedFacts); // See what facts were actually picked
 
+    // If no specific facts were found based on keywords
     if (selectedFacts.length === 0) {
-        factsContainer.innerHTML = "<p>Could not find specific facts, but here's the intro: " + text.substring(0, 200) + "...</p>";
+        // Display a fallback message with a portion of the introductory text
+        factsContainer.innerHTML = `<p>Could not find specific facts, but here's the intro about DevOps: ${text.substring(0, 300)}...</p>`;
     } else {
-        factsContainer.innerHTML = "<h3>Interesting Peacock Facts:</h3>";
+        // If facts were found, display them with a heading
+        factsContainer.innerHTML = "<h3>Interesting DevOps Facts:</h3>";
+        // Add each selected fact as a paragraph
         selectedFacts.forEach(fact => {
             factsContainer.innerHTML += `<p>- ${fact}</p>`;
         });
