@@ -92,8 +92,7 @@
 
         // Now, 'extract' contains the introductory text about peacocks.
         // You can process this text to selectively display facts.
-        console.log(extract);
-
+        console.log("Full Wikipedia Extract:", extract); // Check what 
         // Call a function to display the facts on your screen
         displayPeacockFacts(extract);
     })
@@ -108,7 +107,9 @@
 
     // Example of splitting into sentences and filtering based on keywords
     const sentences = text.split(/(?<=[.!?])\s+/); // Splits by common sentence endings
-    const relevantKeywords = ["species", "habitat", "diet", "feathers", "display"];
+    console.log(sentences); // See how the text is broken down
+    const relevantKeywords = [ "feathers", "plumage", "tail", "found in", "native to", "region", "species", "habitat", "diet", "feathers", "display"];
+    console.log("Keywords:", relevantKeywords); // Just to confirm
     let selectedFacts = [];
 
     sentences.forEach(sentence => {
@@ -119,8 +120,10 @@
 
         if (containsKeyword && selectedFacts.length < 3) { // Limit to 3 facts for display
             selectedFacts.push(sentence);
+            
         }
     });
+    console.log("Selected Facts:", selectedFacts); // See what facts were actually picked
 
     if (selectedFacts.length === 0) {
         factsContainer.innerHTML = "<p>Could not find specific facts, but here's the intro: " + text.substring(0, 200) + "...</p>";
