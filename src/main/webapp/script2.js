@@ -9,20 +9,18 @@
                 });
             }
 
-            // JavaScript for background soundtrack autoplay
+            // enabling background soundtrack autoplay
             const audio = document.getElementById('backgroundSoundtrack');
             if (audio) {
-                audio.volume = 0.9; // Set a default volume (e.g., 50%)
+                audio.volume = 0.9; // setting default volume to 50%
                 audio.play().then(() => {
                     console.log('Soundtrack started playing successfully.');
                 }).catch(error => {
                     console.error('Soundtrack autoplay prevented:', error);
-                    // If autoplay is blocked, you might want to show a button
-                    // for the user to manually start the music.
-                });
+                            });
             }
-
-            // JavaScript for Cyber Background effect
+// KELVIN the 1st doing his thang! lol
+            // enabling the  cyber background effect
             const canvas = document.getElementById('cyberBackgroundCanvas');
             const ctx = canvas.getContext('2d');
 
@@ -31,39 +29,39 @@
             canvas.width = width;
             canvas.height = height;
 
-            // Handle canvas resize
+            // handling the canvas resize
             window.addEventListener('resize', () => {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
-                initializeMatrixEffect(); // Re-initialize drops on resize
+                initializeMatrixEffect(); // re-initializing drops on resize
             });
 
-            // Characters for the matrix effect (numbers and symbols)
+            // characters for the matrix effect i.e numbers and symbols
             const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?`~';
-            const fontSize = 16;
+            const fontSize = 14;
             const columns = Math.floor(width / fontSize);
 
-            // Array to store the y-position of each falling character in a column
+            // this array will store the y-position of each falling character in a column
             const drops = [];
             function initializeMatrixEffect() {
                 for (let i = 0; i < columns; i++) {
-                    drops[i] = 1; // Start each column at the top
+                    drops[i] = 1; // starting each column at the top
                 }
             }
 
-            // Initialize on load
+            // initializing on load
             initializeMatrixEffect();
 
-            // Function to draw the matrix effect
+            // function to draw the matrix effect
             function drawMatrix() {
-                // Dim the old characters slightly to create the trail effect
-                ctx.fillStyle = 'rgba(2, 21, 41, 0.05)'; /* Matches body background with transparency */
+                // dimming the old characters slightly to create the trail effect
+                ctx.fillStyle = 'rgba(2, 21, 41, 0.05)'; /* this will match body background with transparency */
                 ctx.fillRect(0, 0, width, height);
 
-                ctx.fillStyle = '#8A2BE2'; /* Changed to a purple color */
-                ctx.font = `${fontSize}px monospace`; /* Monospace font for consistent spacing */
+                ctx.fillStyle = '#8A2BE2';
+                ctx.font = `${fontSize}px monospace`; /*this monospace font allows consistent spacing */
 
                 for (let i = 0; i < drops.length; i++) {
                     const text = characters.charAt(Math.floor(Math.random() * characters.length));
@@ -72,14 +70,14 @@
 
                     ctx.fillText(text, x, y);
 
-                    // Send the drop back to the top randomly
-                    if (y * fontSize > height && Math.random() > 0.975) { /* Corrected condition */
-                        drops[i] = 0; // Reset to top
+                    // randomly sending the drop back to the top
+                    if (y * fontSize > height && Math.random() > 0.975) {
+                        drops[i] = 0; // resetting to the top
                     }
-                    drops[i]++; // Move the character down
+                    drops[i]++; // moving the character down
                 }
             }
-
-            // Start the animation loop
-            setInterval(drawMatrix, 33); // Approximately 30 frames per second
+// KELVIN the 1st doing his thang! lol
+            // starting the animation loop
+            setInterval(drawMatrix, 33); // ok this sets about 30 frames per second
         }
