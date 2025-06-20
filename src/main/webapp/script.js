@@ -95,18 +95,26 @@ const TOPICS = [
     "Microservices",
     "Cloud computing",
     "Site reliability engineering",
-    "GRUB",
-    "Scripting",
+    "Source code",
+    "IP Address",
     "Ubuntu",
     "Malware",
     "Linux",
-    "BASH",
-    "Command line",
+    "GRub",
+    "Shell",
     "Git",
     "CI/CD",
     "Gradle",
     "SDLC",
-    "Automation"
+    "Automation",
+    "Maven",
+    "Database",
+    "Terraform",
+    "Kubernetes",
+    "Directory",
+    "GREP",
+    "packaging",
+    "pipeline"
 ];
 
 // function to fetch and display data for a specific topic
