@@ -8,21 +8,19 @@
                     console.error('Autoplay prevented:', error);
                 });
             }
-
-            // JavaScript for background soundtrack autoplay
+// KELVIN the 1st doing his thang! lol
+            // enabling background soundtrack autoplay
             const audio = document.getElementById('backgroundSoundtrack');
             if (audio) {
-                audio.volume = 0.9; // Set a default volume (e.g., 50%)
+                audio.volume = 0.9; // sets default volume as 90%
                 audio.play().then(() => {
                     console.log('Soundtrack started playing successfully.');
                 }).catch(error => {
                     console.error('Soundtrack autoplay prevented:', error);
-                    // If autoplay is blocked, you might want to show a button
-                    // for the user to manually start the music.
                 });
             }
 
-            // JavaScript for Cyber Background effect
+            // enabling cyber background effect
             const canvas = document.getElementById('cyberBackgroundCanvas');
             const ctx = canvas.getContext('2d');
 
@@ -31,39 +29,39 @@
             canvas.width = width;
             canvas.height = height;
 
-            // Handle canvas resize
+            // handling canvas resize
             window.addEventListener('resize', () => {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
-                initializeMatrixEffect(); // Re-initialize drops on resize
+                initializeMatrixEffect(); // re-initializing the drops on resize
             });
 
-            // Characters for the matrix effect (numbers and symbols)
+            // characters for the matrix effect i.e numbers and symbols
             const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?`~';
-            const fontSize = 16;
+            const fontSize = 15;
             const columns = Math.floor(width / fontSize);
 
-            // Array to store the y-position of each falling character in a column
+            // this array will store the y-position of each falling character in a column
             const drops = [];
             function initializeMatrixEffect() {
                 for (let i = 0; i < columns; i++) {
-                    drops[i] = 1; // Start each column at the top
+                    drops[i] = 1; // starting each column at the top
                 }
             }
 
-            // Initialize on load
+            // initialization  on load
             initializeMatrixEffect();
 
-            // Function to draw the matrix effect
+            // this function will draw the matrix effect
             function drawMatrix() {
-                // Dim the old characters slightly to create the trail effect
-                ctx.fillStyle = 'rgba(2, 21, 41, 0.05)'; /* Matches body background with transparency */
+                // dimming the old characters slightly to create the trail effect
+                ctx.fillStyle = 'rgba(2, 21, 41, 0.05)'; /* this matches body background with transparency */
                 ctx.fillRect(0, 0, width, height);
 
-                ctx.fillStyle = '#0F0'; /* Green color for the numbers */
-                ctx.font = `${fontSize}px monospace`; /* Monospace font for consistent spacing */
+                ctx.fillStyle = '#0F0'; /* green coloring for the numbers */
+                ctx.font = `${fontSize}px monospace`; /*this monospace font allows consistent spacing */
 
                 for (let i = 0; i < drops.length; i++) {
                     const text = characters.charAt(Math.floor(Math.random() * characters.length));
@@ -72,24 +70,23 @@
 
                     ctx.fillText(text, x, y);
 
-                    // Send the drop back to the top randomly
+                    // sending the drop back to the top randomly
                     if (y > height && Math.random() > 0.975) {
-                        drops[i] = 0; // Reset to top
+                        drops[i] = 0; // resetting to the top
                     }
-                    drops[i]++; // Move the character down
+                    drops[i]++; // moving the character down
                 }
             }
 
-            // Start the animation loop
-            setInterval(drawMatrix, 33); // Approximately 30 frames per second
-// the api data fetch
-        // Fetch data from the Wikipedia API for "DevOps"
-        // Global variable to store the full DevOps extract once fetched
-// Global variables
-let fullExtractsByTopic = {}; // Stores full extracts for topics we've already fetched
-let currentTopicIndex = 0;   // Keeps track of which topic we're currently on
+            // starting the animation loop
+setInterval(drawMatrix, 33); // this sets about 30 frames per second
 
-// List of Wikipedia topics related to DevOps
+// fetching data from the Wikipedia API on DevOps
+// setting the global variables to store the full DevOps extract once fetched
+let fullExtractsByTopic = {}; // stores already fetched full extracts
+let currentTopicIndex = 0;   // keeps track of which topic we're currently on
+
+// list of Wikipedia topics related to DevOps
 const TOPICS = [
     "DevOps",
     "Agile software development",
@@ -98,9 +95,11 @@ const TOPICS = [
     "Microservices",
     "Cloud computing",
     "Site reliability engineering"
+    "Container"
+    "Deployment"
 ];
 
-// Function to fetch and display data for a specific topic
+// function to fetch and display data for a specific topic
 async function fetchAndDisplayTopic(topic) {
     const factsContainer = document.getElementById('devops-facts-container');
     if (!factsContainer) {
@@ -108,10 +107,10 @@ async function fetchAndDisplayTopic(topic) {
         return;
     }
 
-    // Try to get extract from cache first
+    // getting extracted info from cache first
     let extract = fullExtractsByTopic[topic];
 
-    if (!extract) { // If not cached, fetch it
+    if (!extract) { // if not cached, fetch it
         console.log(`Fetching new information for: ${topic}`);
         try {
             const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=${encodeURIComponent(topic)}&origin=*`);
@@ -122,49 +121,47 @@ async function fetchAndDisplayTopic(topic) {
 
             if (pageId && pages[pageId] && pages[pageId].extract) {
                 extract = pages[pageId].extract;
-                fullExtractsByTopic[topic] = extract; // Cache the extract
+                fullExtractsByTopic[topic] = extract; // cache the extracted info
             } else {
-                extract = ""; // No extract found for this topic
+                extract = ""; // no extract found for this topic
                 console.warn(`No extract found for topic: ${topic}`);
             }
         } catch (error) {
             console.error(`Error fetching data for ${topic} from Wikipedia:`, error);
-            extract = ""; // Set extract to empty on error
+            extract = ""; // set extract to empty on error
         }
     } else {
         console.log(`Using cached information for: ${topic}`);
     }
 
-    // Now, display the facts from the fetched/cached extract
+    //displaying the facts from the fetched or cached info extracted 
     displayTopicFacts(extract, topic);
 }
 
-// Function to display the extracted facts for the current topic
+// function to display the extracted facts for the current topic
 function displayTopicFacts(text, topicTitle) {
     const factsContainer = document.getElementById('devops-facts-container');
     if (!factsContainer) {
-        // This check should already be done by the calling function, but as a safeguard
         console.error("DevOps facts container not found in HTML!");
         return;
     }
 
-    // Define keywords relevant to general tech/DevOps concepts
-    // These are broad enough to apply to various related topics
+    // defining keywords relevant to general tech/DevOps concepts, broad enough to apply to various related topics
+    
     const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools",
                               "collaboration", "integration", "delivery", "cicd", "continuous",
                               "principles", "workflow", "methodology", "practices", "software",
                               "system", "application", "development", "operations", "infrastructure",
-                              "cloud", "agile", "testing", "monitoring"];
+                              "cloud", "agile", "testing", "monitoring","container","deployment","testing"];
 
-    // Maximum character length for displayed facts
-    const MAX_FACT_LENGTH = 180; // Slightly increased for more content per fact
-
-    let allPotentialFacts = []; // Store all sentences that contain keywords
-
-    // Split the text into individual sentences
+    // setting the maximum character length for displayed facts
+    const MAX_FACT_LENGTH = 180; 
+    // storing all sentences that contain keywords
+    let allPotentialFacts = []; 
+    // splitting the text into individual sentences
     const sentences = text.split(/(?<=[.!?])\s+/);
 
-    // Filter sentences that contain any of our keywords
+    // filtering sentences containing any of the keywords
     sentences.forEach(sentence => {
         const containsKeyword = relevantKeywords.some(keyword =>
             sentence.toLowerCase().includes(keyword)
@@ -176,20 +173,20 @@ function displayTopicFacts(text, topicTitle) {
 
     let selectedFacts = [];
 
-    // If we have potential facts, select a subset and process for length
+    // if we have potential facts, select a subset and process for length
     if (allPotentialFacts.length > 0) {
-        // Randomly shuffle the facts to ensure variety on each display
+        // randomly shuffling the facts to ensure variety on each display
         allPotentialFacts.sort(() => Math.random() - 0.5);
 
-        // Select up to 3 facts, applying truncation
+        // selecting up to 3 facts, applying truncation
         for (let i = 0; i < allPotentialFacts.length && selectedFacts.length < 3; i++) {
             let currentFact = allPotentialFacts[i];
             let processedFact = currentFact;
 
-            // Truncate if too long, add ellipsis
+            // truncating if too long, adding ellipsis
             if (currentFact.length > MAX_FACT_LENGTH) {
                 processedFact = currentFact.substring(0, MAX_FACT_LENGTH).trim();
-                if (processedFact.length < currentFact.length) { // Only add if actually shortened
+                if (processedFact.length < currentFact.length) {
                     processedFact += '...';
                 }
             }
@@ -197,10 +194,10 @@ function displayTopicFacts(text, topicTitle) {
         }
     }
 
-    // Update the content of the facts container
+    // updating the content of the facts container
     if (selectedFacts.length === 0) {
-        // Fallback: If no specific facts or too few found, display a truncated intro
-        let introText = text.substring(0, 350); // Get more of the intro for fallback
+        // this is a fallback to display a truncated intro ,if no specific facts or too few were found
+        let introText = text.substring(0, 350); // getting more of the intro for fallback
         if (introText.length > 0 && introText.length < text.length) {
             introText += '...';
         } else if (introText.length === 0 && text.length === 0) {
@@ -208,46 +205,46 @@ function displayTopicFacts(text, topicTitle) {
         }
         factsContainer.innerHTML = `<p>Could not find specific facts for ${topicTitle}, but here's the intro: ${introText}</p>`;
     } else {
-        // If facts were found, display them with a heading
+        // if facts were found we display them with a heading
         factsContainer.innerHTML = `<h3>Interesting Facts about ${topicTitle}:</h3>`;
         selectedFacts.forEach(fact => {
             factsContainer.innerHTML += `<p>- ${fact}</p>`;
         });
     }
 
-    // Make sure the container is visible
+    // making sure the container is visible
     factsContainer.style.opacity = '1';
     factsContainer.style.visibility = 'visible';
 }
 
-// Function to manage the appearance, disappearance, and refresh of topics
+// function to manage the appearance, disappearance, and refreshing of topics
 function cycleTopics() {
     const factsContainer = document.getElementById('devops-facts-container');
     if (!factsContainer) return;
 
-    // Step 1: Fade out the current facts
+    // step 1: fading out the current facts
     factsContainer.style.opacity = '0';
     factsContainer.style.visibility = 'hidden';
 
-    // Step 2: Wait for fade-out, then update content and fade in
+    // Step 2: waiting for fade-out, then updating content and fade in
     setTimeout(() => {
-        // Move to the next topic
+        // moving to the next topic
         currentTopicIndex = (currentTopicIndex + 1) % TOPICS.length;
         const nextTopic = TOPICS[currentTopicIndex];
 
-        // Fetch and display the next topic's facts
+        // fetch and display the next topic's facts
         fetchAndDisplayTopic(nextTopic);
 
-        // The displayTopicFacts function will set opacity back to 1 and visibility to visible
-    }, 1000); // Wait 1 second (match CSS transition for fade-out)
+        // the displayTopicFacts function will set opacity back to 1 and visibility to visible
+    }, 1000); // waiting 1 second to match CSS transition for fade-out
 }
 
-// Initial load: Fetch and display the first topic
+// initial load: fetching and displaying the first topic
 document.addEventListener('DOMContentLoaded', () => {
     fetchAndDisplayTopic(TOPICS[currentTopicIndex]);
 });
 
-// Set up the interval to cycle topics every 8 seconds (8000 milliseconds)
+// setting up the interval to cycle topics every 8 seconds i.e 8000 ms
 setInterval(cycleTopics, 8000);        
         };
 
