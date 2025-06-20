@@ -89,6 +89,11 @@ let fullDevOpsExtract = "";
 let currentFactIndex = 0; // To keep track of which set of facts we're showing
 
 // Function to fetch data from the Wikipedia API for "DevOps"
+// Global variable to store the full DevOps extract once fetched
+let fullDevOpsExtract = "";
+let currentFactIndex = 0; // To keep track of which set of facts we're showing
+
+// Function to fetch data from the Wikipedia API for "DevOps"
 function fetchDevOpsFacts() {
     fetch('https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=DevOps&origin=*')
         .then(response => response.json())
@@ -119,6 +124,9 @@ function displayDevOpsFacts(text) {
     const relevantKeywords = ["culture", "automation", "lean", "measure", "share", "tools", "collaboration", "integration", "delivery", "cicd", "continuous", "principles", "workflow"];
     let allPotentialFacts = []; // Store all sentences that contain keywords
 
+    // Define a maximum character length for displayed facts
+    const MAX_FACT_LENGTH = 120; // You can adjust this value as needed
+
     // Split the text into individual sentences
     const sentences = text.split(/(?<=[.!?])\s+/);
 
@@ -136,18 +144,43 @@ function displayDevOpsFacts(text) {
 
     // If we have potential facts, select a random subset
     if (allPotentialFacts.length > 0) {
-        // Shuffle the array to get random facts each time
-        allPotentialFacts.sort(() => Math.random() - 0.5);
+        // Step 1: Prioritize shorter sentences
+        // Sort by length in ascending order (shortest first)
+        allPotentialFacts.sort((a, b) => a.length - b.length);
 
-        // Select the first 3 (or fewer if not enough) random facts
-        selectedFacts = allPotentialFacts.slice(0, 3);
+        // Step 2: Select up to 5 shortest facts that meet the keyword criteria
+        // (We might need more than 3 initially if some are too long after truncation)
+        let tempFacts = allPotentialFacts.slice(0, Math.min(allPotentialFacts.length, 5));
+
+        // Step 3: Truncate if necessary and add to final selection
+        tempFacts.forEach(fact => {
+            if (selectedFacts.length < 3) { // Only add up to 3 final facts
+                let processedFact = fact;
+                if (processedFact.length > MAX_FACT_LENGTH) {
+                    // Truncate and add ellipsis, ensure it ends cleanly
+                    processedFact = processedFact.substring(0, MAX_FACT_LENGTH).trim();
+                    // Avoid cutting off in the middle of a word if possible
+                    const lastSpaceIndex = processedFact.lastIndexOf(' ');
+                    if (lastSpaceIndex > MAX_FACT_LENGTH - 20) { // If last word is too long
+                        processedFact = processedFact.substring(0, lastSpaceIndex);
+                    }
+                    processedFact += '...';
+                }
+                selectedFacts.push(processedFact);
+            }
+        });
     }
 
     // Update the content of the facts container
     if (selectedFacts.length === 0) {
-        factsContainer.innerHTML = `<p>Could not find specific facts, but here's the intro about DevOps: ${text.substring(0, 300)}...</p>`;
+        // Fallback: If no specific facts or too few found, display a truncated intro
+        let introText = text.substring(0, 300);
+        if (introText.length >= 300) introText += '...';
+        factsContainer.innerHTML = `<p>Could not find specific facts, but here's the intro about DevOps: ${introText}</p>`;
     } else {
+        // If facts were found, display them with a heading
         factsContainer.innerHTML = "<h3>Interesting DevOps Facts:</h3>";
+        // Add each selected fact as a paragraph
         selectedFacts.forEach(fact => {
             factsContainer.innerHTML += `<p>- ${fact}</p>`;
         });
