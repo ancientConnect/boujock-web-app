@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     tools {
-        // These names MUST match exactly what you configured in Jenkins Global Tool Configuration
-        // Go to Manage Jenkins -> Tools to verify these names.
-        maven 'Maven s/w' // Ensure 'Maven s/w' is the exact name of your Maven installation
-        jdk 'Java s/w'    // Ensure 'Java s/w' is the exact name of your JDK installation
+        maven 'Maven s/w' // name my Maven installation
+        jdk 'Java s/w'    // name of my JDK installation
     }
 
     stages {
@@ -13,7 +11,7 @@ pipeline {
             steps {
                 script {
                     git branch: 'main', url: 'git@github.com:ancientConnect/boujock-web-app.git',
-                        credentialsId: 'github-ec2-key' // Ensure 'github-ec2-key' is your correct Jenkins credential ID
+                        credentialsId: 'github-ec2-key' // this is my Jenkins credential ID
                 }
             }
         }
@@ -29,23 +27,20 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.war', fingerprint: true
             }
         }
-        // NEW STAGE FOR LOCAL DEPLOYMENT TO TOMCAT
+        //this stage is for deployment to tomcat
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                    // Stop Tomcat service temporarily for safe deployment (optional, but recommended for production)
-                    // Replace 'tomcat' with your actual Tomcat service name (e.g., 'tomcat9', 'tomcat8')
+                    // tomcat service will be temporarily stopped for safe deployment
                     sh 'sudo systemctl stop tomcat' 
 
-                    // Copy the WAR file to Tomcat's webapps directory
-                    // !!! IMPORTANT: Replace /path/to/tomcat/webapps/ with the actual path on your EC2 instance !!!
+                    // copying the WAR file to Tomcat's webapps directory
                     sh 'sudo cp target/*.war /home/ec2-user/apache-tomcat-9.0.106/webapps'
-
-                    // Start Tomcat service
-                    // Replace 'tomcat' with your actual Tomcat service name (e.g., 'tomcat9', 'tomcat8')
+                    // start Tomcat service
                     sh 'sudo systemctl start tomcat' 
-
+                    // now here's a sign of victory! 
                     echo "Deployed WAR file to Tomcat successfully!"
+                    // i mean it's a win right
                 }
             }
         }
