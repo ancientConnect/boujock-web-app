@@ -29,11 +29,11 @@ pipeline {
                     echo "Running HTML Proofer..."
                     //this html-proofer runs against HTML, CSS, JS, and other static assets in src/main/webapp directory
                     try {
-                        // We will ensure `bundle install` is run if a Gemfile exists
-                        // otherwise, we assume `html-proofer` is globally installed.
-                        // It's safer to use Bundler if you have multiple Ruby dependencies.
-
-                        // Check if a Gemfile exists, if so, install dependencies
+                        // the following command will tell Bundler to install gems into './vendor/bundle'
+                        // within my Jenkins workspace for this project.
+                        'bundle config set --local path \'vendor/bundle\''
+                        
+                        // checking if a Gemfile exists, if so, install dependencies
                         sh """
                             if [ -f Gemfile ]; then
                                 echo "Gemfile found, running bundle install..."
