@@ -43,9 +43,8 @@ pipeline {
                                 echo "No Gemfile found, assuming html-proofer is globally available."
                             fi
                         """
-                        // Execute html-proofer using 'bundle exec' and update options.
-                        // '--internal-domains' is no longer a recognized command-line option in html-proofer 5.0.10.
-                        sh 'bundle exec htmlproofer ./src/main/webapp --checks html,favicon,script,link_external --allow-missing-href' // Edited: Removed '--internal-domains'
+                        // executiom of html-proofer using bundle exec and update options.
+                        sh 'bundle exec htmlproofer ./src/main/webapp --checks html,favicon,script,link_external --allow-missing-href'
                         // --checks html,favicon,script,link_external: validates HTML syntax, checks for favicon.ico, checks for broken script tags, and checks external links
                         // --allow-missing-href: allows <a> tags without href attributes
                         echo "HTML Proofer completed successfully."
