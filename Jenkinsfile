@@ -22,6 +22,47 @@ pipeline {
                 }
             }
         }
+    // this stage is for HTML Proofer test
+        stage('HTML Proofer') {
+            steps {
+                script {
+                    echo "Running HTML Proofer..."
+                    //this html-proofer runs against HTML, CSS, JS, and other static assets in src/main/webapp directory
+                    try {
+                        // We will ensure `bundle install` is run if a Gemfile exists
+                        // otherwise, we assume `html-proofer` is globally installed.
+                        // It's safer to use Bundler if you have multiple Ruby dependencies.
+
+                        // Check if a Gemfile exists, if so, install dependencies
+                        sh """
+                            if [ -f Gemfile ]; then
+                                echo "Gemfile found, running bundle install..."
+                                bundle install
+                            else
+                                echo "No Gemfile found, assuming html-proofer is globally available."
+                            fi
+                        """
+                        
+                        sh 'htmlproofer ./src/main/webapp --check-html --check-favicon --check-scripts --check-external-links --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"'
+                        // --check-html: validates HTML syntax
+                        // --check-favicon: checks for favicon.ico
+                        // --check-scripts: checks for broken script tags
+                        // --check-external-links:  for link checking
+                        // --allow-missing-href: allows <a> tags without href attributes
+                        // --internal-domains: helps html-proofer distinguish internal links
+                        echo "HTML Proofer completed successfully."
+                    } catch (e) {
+                        echo "HTML Proofer found issues and failed: ${e}"
+                        error "HTML Proofer issues detected. Please check the build logs."
+                    }
+                }
+            }
+        }
+
+
+
+
+        
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.war', fingerprint: true
