@@ -29,10 +29,11 @@ pipeline {
                     echo "Running HTML Proofer..."
                     //this html-proofer runs against HTML, CSS, JS, and other static assets in src/main/webapp directory
                     try {
-                        // the following command will tell Bundler to install gems into './vendor/bundle'
+                        // The following command will tell Bundler to install gems into './vendor/bundle'
                         // within my Jenkins workspace for this project.
-                        'bundle config set --local path \'vendor/bundle\''
-                        
+                        // This ensures the Jenkins user has write access for gem installation.
+                        sh 'bundle config set --local path \'vendor/bundle\'' 
+
                         // checking if a Gemfile exists, if so, install dependencies
                         sh """
                             if [ -f Gemfile ]; then
@@ -42,7 +43,7 @@ pipeline {
                                 echo "No Gemfile found, assuming html-proofer is globally available."
                             fi
                         """
-                        
+
                         sh 'htmlproofer ./src/main/webapp --check-html --check-favicon --check-scripts --check-external-links --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"'
                         // --check-html: validates HTML syntax
                         // --check-favicon: checks for favicon.ico
@@ -62,7 +63,6 @@ pipeline {
 
 
 
-        
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.war', fingerprint: true
@@ -73,13 +73,13 @@ pipeline {
             steps {
                 script {
                     // tomcat service will be temporarily stopped for safe deployment
-                    sh 'sudo systemctl stop tomcat' 
+                    sh 'sudo systemctl stop tomcat'
 
                     // copying the WAR file to Tomcat's webapps directory
                     sh 'sudo cp target/*.war /home/ec2-user/apache-tomcat-9.0.106/webapps'
                     // start Tomcat service
-                    sh 'sudo systemctl start tomcat' 
-                    // now here's a sign of victory! 
+                    sh 'sudo systemctl start tomcat'
+                    // now here's a sign of victory!
                     echo "Deployed WAR file to Tomcat successfully!"
                     // i mean it's a win right
                 }
