@@ -44,10 +44,9 @@ pipeline {
                             fi
                         """
                         // Execute html-proofer using 'bundle exec' and update options to use '--checks'
-                        // as '--check-html' and similar are no longer recognized.
-                        sh 'bundle exec htmlproofer ./src/main/webapp --checks html,favicon,script --check-external-links --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"' // Edited: Consolidated check options
-                        // --checks html,favicon,script: validates HTML syntax, checks for favicon.ico, checks for broken script tags
-                        // --check-external-links:  for link checking
+                        // now including 'link_external' for checking external links.
+                        sh 'bundle exec htmlproofer ./src/main/webapp --checks html,favicon,script,link_external --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"' // Edited: Added 'link_external' to --checks
+                        // --checks html,favicon,script,link_external: validates HTML syntax, checks for favicon.ico, checks for broken script tags, and checks external links
                         // --allow-missing-href: allows <a> tags without href attributes
                         // --internal-domains: helps html-proofer distinguish internal links
                         echo "HTML Proofer completed successfully."
