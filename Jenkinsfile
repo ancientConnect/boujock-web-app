@@ -43,11 +43,10 @@ pipeline {
                                 echo "No Gemfile found, assuming html-proofer is globally available."
                             fi
                         """
-                        // Execute html-proofer using 'bundle exec' to ensure it runs from the locally installed gems.
-                        sh 'bundle exec htmlproofer ./src/main/webapp --check-html --check-favicon --check-scripts --check-external-links --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"'
-                        // --check-html: validates HTML syntax
-                        // --check-favicon: checks for favicon.ico
-                        // --check-scripts: checks for broken script tags
+                        // Execute html-proofer using 'bundle exec' and update options to use '--checks'
+                        // as '--check-html' and similar are no longer recognized.
+                        sh 'bundle exec htmlproofer ./src/main/webapp --checks html,favicon,script --check-external-links --allow-missing-href --internal-domains "localhost,127.0.0.1,yourproductiondomain.com"' // Edited: Consolidated check options
+                        // --checks html,favicon,script: validates HTML syntax, checks for favicon.ico, checks for broken script tags
                         // --check-external-links:  for link checking
                         // --allow-missing-href: allows <a> tags without href attributes
                         // --internal-domains: helps html-proofer distinguish internal links
@@ -56,7 +55,7 @@ pipeline {
                         // The previous interpolation `${e}` can sometimes cause Groovy compilation errors
                         // in Jenkins' CPS transformation. Explicitly converting the exception to a string
                         // avoids this issue.
-                        echo "HTML Proofer found issues and failed: " + e.toString() // Edited: Changed string interpolation for 'e'
+                        echo "HTML Proofer found issues and failed: " + e.toString()
                         error "HTML Proofer issues detected. Please check the build logs."
                     }
                 }
