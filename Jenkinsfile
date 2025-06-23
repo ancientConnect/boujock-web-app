@@ -49,8 +49,8 @@ pipeline {
                         // --allow-missing-href: allows <a> tags without href attributes
                         echo "HTML Proofer completed successfully."
                     } catch (e) {
-                        // The previous interpolation `${e}` can sometimes cause Groovy compilation errors
-                        // in Jenkins' CPS transformation. Explicitly converting the exception to a string
+                        // the interpolation `${e}` can sometimes cause Groovy compilation errors
+                        // in Jenkins' CPS transformation explicitly converting the exception to a string
                         // avoids this issue.
                         echo "HTML Proofer found issues and failed: " + e.toString()
                         error "HTML Proofer issues detected. Please check the build logs."
